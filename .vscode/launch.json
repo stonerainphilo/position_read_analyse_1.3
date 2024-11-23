@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/shiyuzhe/Documents/University/LLP/Second_Term/pythia8/BtoKa/Code/position_read_analyse_1.3/LLP_data_for_test/2024-11-11-1",
+      "program": "/Users/shiyuzhe/Documents/University/LLP/Second_Term/pythia8/BtoKa/Code/position_read_analyse_1.3/LLP_data_for_test/2024-11-11-1/build/Debug/outDebug"
+    }
+  ]
+}

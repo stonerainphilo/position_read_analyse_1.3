@@ -1,0 +1,54 @@
+### Daliy log
+
+#### 2024-11-11----2024-11-23(0.5, 1, 1.5, 2, 2.5, 3 GeV)
+
+The data set has a few problems:
+    Mass between 1 and 2 has relatively well performance. HOWEVER, the mass of 0.5 GeV has remarkable difference with our expectation: the upper lim is significantly lower than it should be, while the mass above 2 Gev(To be more specific: 2.5 and 3) has unusually MORE data than it should be. 
+
+Analyzation:
+    Our simulation's error obiviously is relavant to LLP's mass. Naturally, we should consider simulation's part which has relation with particle's mass. 
+    In our simulation: the
+
+    ```C++
+        IsResonance
+        tauCalcu
+    ```
+    functions are related to mass.
+
+    The sim we used during the test is:
+
+    ```C++
+        pythia.readString("999999:all = GeneralResonance void 0 0 0 " + doubleToScientificString(mA) + " 0 0 10 " + doubleToScientificString(ctau));
+        pythia.readString("999999:addchannel = 1 1 101 13 -13");
+        pythia.readString("999999:isResonance = true");
+        // pythia.readString("ResonanceWidths:minWidth = 1e-30" + doubleToScientificString(calculate_Gamma_aka_minwidth(ctau)));
+        pythia.readString("ResonanceWidths:minWidth = 1e-30");
+        pythia.readString("999999:tauCalc = false");
+    ```
+
+Solution:
+
+    ```C++
+        pythia.readString("999999:all = GeneralResonance void 0 0 0 " + doubleToScientificString(mA) + " 0 0 10 " + doubleToScientificString(ctau));
+        pythia.readString("999999:addchannel = 1 1 101 13 -13");
+        pythia.readString("999999:isResonance = false");
+        // pythia.readString("ResonanceWidths:minWidth = 1e-30" + doubleToScientificString(calculate_Gamma_aka_minwidth(ctau)));
+        // pythia.readString("ResonanceWidths:minWidth = 1e-30");
+        // pythia.readString("999999:tauCalc = false");
+    ```
+    Among which we set the LLP as NOT RESONANCE anymore. 
+
+    RESONS:
+        Our LLP's mass has no significant Giant mass, while the function
+        ```C++
+            void ParticleDataEntry::setIsResonance(bool isResonance)  
+            bool ParticleDataEntry::isResonance()  
+        ```
+        is said to be:
+        ```
+            void ParticleDataEntry::setIsResonance(bool isResonance)  
+            bool ParticleDataEntry::isResonance()  
+            a flag telling whether a particle species are considered as a resonance or not. Here "resonance" is used as shorthand for any massive particle where the decay process should be counted as part of the hard process itself, and thus be performed before showers and other event aspects are added. Restrictions on allowed decay channels is also directly reflected in the cross section of simulated processes, while those of normal hadrons and other light particles are not. In practice, it is reserved for states above the b bbar bound systems in mass, i.e. for W, Z, t, Higgs states, supersymmetric states and (most?) other states in any new theory. All particles with m0 above 20 GeV are by default initialized to be considered as resonances.
+        ```
+
+        Consider our LLP are NOT VERY MASSIVE, we set is as false to give it a shot.

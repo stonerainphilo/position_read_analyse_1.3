@@ -1,0 +1,36 @@
+### What outernal Package does it need?
+Pythia8 with HepMC, python with certain packages lised.
+```python
+    # import subprocess
+    from datetime import datetime
+    import subprocess
+    import os
+    import csv
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import mplhep as hep
+    import pandas as pd
+    import random
+    from tqdm import tqdm
+    import glob
+    # from mpl_toolkits.mplot3d import Axes3D
+    import matplotlib
+    import PIL
+    # import tkinter
+    from threading import Thread
+```
+
+### How to Run This Program?
+    Open the 'generate_save_analyse_judge.ipynb', you will know.
+    Other .ipynb files are not necessary for simple use.
+    ALL .py files are functions needed for necessary run. You don't have to change it unless it's needed for your use. 
+    
+    
+### What does the Out_put csv files contain?
+    The csv files contain LLPs 'br, ctau(tau), mass(m), energy(e), momentum(p_x/y/z)'
+        'production position(x/y/z_Prod), decay position x/y/z'
+        'Whether can be detected (0 is cannot, 1 is can)'
+        
+    
+
+
