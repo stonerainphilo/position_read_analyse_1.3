@@ -120,3 +120,41 @@ New thoughts:
         ### 总结
 
         这些方法用于模拟粒子衰变时，考虑了不同的物理条件和假设。选择合适的方法取决于对粒子质量波动和阈值效应的具体处理需求。
+
+
+Solution:
+
+    ```c++
+    pythia.readString("Print:quiet = off");
+    pythia.readString("Random:setSeed = on");
+    pythia.readString("Random:seed = " + std::to_string(seed));
+    pythia.readString("Beams:eCM = 13000.");//  total Energy in Gev
+    pythia.readString("HardQCD:hardbbbar  = on");
+    // pythia.readString("HardQCD:all = on");
+    pythia.readString("999999:all = GeneralResonance void 0 0 0 " + doubleToScientificString(mA) + " 0 0 10 " + doubleToScientificString(ctau));
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_Hmumu, 5) + " 102 13 -13"); // to mu-mu+
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_Hee, 5) + " 102 11 -11"); // to e-e+
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_HKK, 5) + " 102 311 311"); // to Kaon^0 Kaon^0
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_HPiPi, 5) + " 102 111 111"); // to pion pion
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_Htautau, 5) + " 102 15 -15"); // to tau^- tau^+
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_HGluon, 5) + " 102 21 21"); // gg
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_Hgaga, 5) + " 102 22 22"); //gamma gamma
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_H4Pi, 5) + " 102 111 111 111 111"); // to 4 pion (uncharged)
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_Hss, 5) + " 102 3 -3"); // to s sbar
+    pythia.readString("999999:addchannel = 1 " + doubleToScientificString(Br_Hcc, 5) + " 102 4 -4"); // to c cbar
+    pythia.readString("999999:isResonance = true");
+    // pythia.readString("ResonanceWidths:minWidth = 1e-30" + doubleToScientificString(calculate_Gamma_aka_minwidth(ctau)));
+    // pythia.readString("ResonanceWidths:minWidth = 1e-30");
+    pythia.readString("999999:tauCalc = false");
+    
+    pythia.readString("999999:onMode = 1");
+    pythia.readString("999999:MayDecay = true");
+    // pythia.readString("ResonanceWidths:enhance = 999999 " + doubleToScientificString(br/2));
+    // cout << "ok after prepare_pick " << endl;
+    pythia.readString("521:oneChannel = 1 1 101 999999 321");
+    pythia.readString("511:oneChannel = 1 1 101 999999 311");
+    ```
+
+    As shown above:
+        All Branchings as their Ratio are provided and setted by a csv file.
+        Unfortunately, this means I have to rewrited a lot of running functions.
