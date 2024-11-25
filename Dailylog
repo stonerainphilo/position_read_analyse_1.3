@@ -3,7 +3,11 @@
 #### 2024-11-11----2024-11-23(0.5, 1, 1.5, 2, 2.5, 3 GeV)
 
 The data set has a few problems:
-    Mass between 1 and 2 has relatively well performance. HOWEVER, the mass of 0.5 GeV has remarkable difference with our expectation: the upper lim is significantly lower than it should be, while the mass above 2 Gev(To be more specific: 2.5 and 3) has unusually MORE data than it should be. 
+    Mass between 1 and 2 has relatively well performance. 
+    HOWEVER, the mass of 0.5 GeV has remarkable difference with our expectation: 
+    the upper lim is significantly lower than it should be, 
+    while the mass above 2 Gev(To be more specific: 2.5 and 3) 
+    has unusually MORE data than it should be. 
 
 Analyzation:
     Our simulation's error obiviously is relavant to LLP's mass. Naturally, we should consider simulation's part which has relation with particle's mass. 
@@ -52,3 +56,35 @@ Solution:
         ```
 
         Consider our LLP are NOT VERY MASSIVE, we set is as false to give it a shot.
+
+#### 2024-11-24
+Again, there's problems with simulation:
+    The upper lim of 0.5 GeV is fixed, but the LOWER LIM IS WRONG as bad as it could be.
+    Along with the 0.5 GeV, 3 GeV has fewer data and smaller range, but still not correct.
+
+Solution:
+    ```C++
+
+        pythia.readString("999999:addchannel = 1 1 101 13 -13");
+        pythia.readString("999999:isResonance = true");
+        // pythia.readString("ResonanceWidths:minWidth = 1e-30" + doubleToScientificString(calculate_Gamma_aka_minwidth(ctau)));
+        // pythia.readString("ResonanceWidths:minWidth = 1e-30");
+        pythia.readString("999999:tauCalc = true");
+
+    ```
+
+#### 2024-11-25
+
+New thoughts:
+    ResonanceDecay: memode???? 
+    mWidth(\Gamma) is needed if 
+    ```C++
+    pythia.readString("999999:tauCalc = true");
+    ```
+    ???
+
+    SEE PhaseSpace.cc MUST
+
+
+    Seems we need to add every channel of our LLP to the PYTHIA8 programm
+
