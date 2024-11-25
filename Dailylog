@@ -32,7 +32,7 @@ Analyzation:
 
 Solution:
 
-    ```C++
+    ```c++
         pythia.readString("999999:all = GeneralResonance void 0 0 0 " + doubleToScientificString(mA) + " 0 0 10 " + doubleToScientificString(ctau));
         pythia.readString("999999:addchannel = 1 1 101 13 -13");
         pythia.readString("999999:isResonance = false");
@@ -43,17 +43,19 @@ Solution:
     Among which we set the LLP as NOT RESONANCE anymore. 
 
     RESONS:
-        Our LLP's mass has no significant Giant mass, while the function
-        ```C++
-            void ParticleDataEntry::setIsResonance(bool isResonance)  
-            bool ParticleDataEntry::isResonance()  
-        ```
+        Our LLP's mass has no significant Giant mass, while the function:
+
+    ```c++
+        void ParticleDataEntry::setIsResonance(bool isResonance)  
+        bool ParticleDataEntry::isResonance()  
+    ```
         is said to be:
-        ```
-            void ParticleDataEntry::setIsResonance(bool isResonance)  
-            bool ParticleDataEntry::isResonance()  
-            a flag telling whether a particle species are considered as a resonance or not. Here "resonance" is used as shorthand for any massive particle where the decay process should be counted as part of the hard process itself, and thus be performed before showers and other event aspects are added. Restrictions on allowed decay channels is also directly reflected in the cross section of simulated processes, while those of normal hadrons and other light particles are not. In practice, it is reserved for states above the b bbar bound systems in mass, i.e. for W, Z, t, Higgs states, supersymmetric states and (most?) other states in any new theory. All particles with m0 above 20 GeV are by default initialized to be considered as resonances.
-        ```
+
+    ```c++
+        void ParticleDataEntry::setIsResonance(bool isResonance)  
+        bool ParticleDataEntry::isResonance()  
+        a flag telling whether a particle species are considered as a resonance or not. Here "resonance" is used as shorthand for any massive particle where the decay process should be counted as part of the hard process itself, and thus be performed before showers and other event aspects are added. Restrictions on allowed decay channels is also directly reflected in the cross section of simulated processes, while those of normal hadrons and other light particles are not. In practice, it is reserved for states above the b bbar bound systems in mass, i.e. for W, Z, t, Higgs states, supersymmetric states and (most?) other states in any new theory. All particles with m0 above 20 GeV are by default initialized to be considered as resonances.
+    ```
 
         Consider our LLP are NOT VERY MASSIVE, we set is as false to give it a shot.
 
@@ -63,15 +65,17 @@ Again, there's problems with simulation:
     Along with the 0.5 GeV, 3 GeV has fewer data and smaller range, but still not correct.
 
 Solution:
+
     ```C++
 
-        pythia.readString("999999:addchannel = 1 1 101 13 -13");
+        pythia.readString("999999:addchannel = 1 1 101 13 -13"); // memode is 101
         pythia.readString("999999:isResonance = true");
         // pythia.readString("ResonanceWidths:minWidth = 1e-30" + doubleToScientificString(calculate_Gamma_aka_minwidth(ctau)));
         // pythia.readString("ResonanceWidths:minWidth = 1e-30");
         pythia.readString("999999:tauCalc = true");
 
     ```
+
 
 #### 2024-11-25
 
@@ -87,4 +91,32 @@ New thoughts:
 
 
     Seems we need to add every channel of our LLP to the PYTHIA8 programm
+ About Onmode and memode:
+    memode:
+        在高能物理中，粒子的衰变宽度和分支比是描述粒子衰变特性的关键参数。以下是对这几种计算部分宽度的方法的解释：
 
+        ### 100: 固定部分宽度
+
+        - **计算方法**：部分宽度通过存储的分支比乘以存储的总宽度来计算。
+        - **特点**：当共振粒子质量波动时，部分宽度保持不变。即使共振质量低于阈值，也假设衰变道仍然开放。
+
+        ### 101: 阶跃阈值
+
+        - **计算方法**：部分宽度通过存储的分支比乘以存储的总宽度，再乘以一个阶跃阈值。
+        - **特点**：如果子粒子的质量和超过当前母粒子的质量，衰变道关闭。
+
+        ### 102: 平滑阈值因子
+
+        - **计算方法**：部分宽度通过存储的分支比乘以存储的总宽度，再乘以一个平滑阈值因子。
+        - **两体衰变**：使用因子 \(\beta = \sqrt{(1 - m_1^2/m^2 - m_2^2/m^2)^2 - 4 m_1^2 m_2^2/m^4}\)。
+        - **多体衰变**：使用因子 \(\sqrt{1 - \sum_i m_i / m}\)。
+        - **特点**：考虑了相空间的大小，但忽略了矩阵元的复杂行为。
+
+        ### 103: 修正的平滑阈值因子
+
+        - **计算方法**：与 102 类似，但假设默认的分支比和总宽度已经考虑了阈值因子，因此需要除以在壳阈值因子。
+        - **特点**：对于在壳质量，返回存储的分支比。为了避免除以零或不合理的缩放，设置了一个最小阈值。
+
+        ### 总结
+
+        这些方法用于模拟粒子衰变时，考虑了不同的物理条件和假设。选择合适的方法取决于对粒子质量波动和阈值效应的具体处理需求。
