@@ -158,3 +158,65 @@ Solution:
     As shown above:
         All Branchings as their Ratio are provided and setted by a csv file.
         Unfortunately, this means I have to rewrited a lot of running functions.
+
+
+#### 2024-11-29
+
+Change:
+
+    IsResonance = false
+    tauCalc = false
+    memode = 103
+
+
+#### 2024-11-30
+
+Change:
+
+    HardQCD all: on
+    ALL memode = 101
+
+Change:
+
+    HardQCD: hardbbbar = on //Only have B-mesons
+    ALL memode = 101
+    IsResonance = false
+    tauCalc = false
+
+Results:
+
+    For mass = 0.3GeV, seems the tau input matches perfectly.
+    Now will do more mass.
+
+    HOWEVER, there are some doubts needed to be clearfied:
+        1. After setting the 
+
+        ```C++
+            HardQCD: all = on
+            ~~~~~~
+            IsResonance = true
+        ```
+        
+        The amount of data significantly dropped from 1700+/1kEvent, to 10/1kEvent.
+        I think this is due to the amount of Bmesons. Cause:
+
+        ```C++
+            HardQCD: bbar = on
+        ```
+        The amount of data back to normal.
+
+        But there still a question about
+
+        ```C++
+            IsResonance = true
+        ```
+        Will influence the data or not.
+        During the test, at first we have ```IsResonance = false```, then the data remains unusually
+        few and little. After seting ```IsResonance = true```, the data back to normal. 
+        Then we setted ```IsResonance = false```, The data amount stays normal.
+
+        I think the unusually phenomenon is due to latency of the make and ./. But if the 
+        data cannot reach our expectation, this might be a point to be looking into.
+    
+
+    
