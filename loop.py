@@ -83,10 +83,10 @@ def loop_mass_ctau_br_given_by_csv(csv_file, br, seed_amount, out_put_path, main
     total_iterations = seed_amount * len(df['mH'])
     with tqdm(total=total_iterations) as pbar:
         for seed in generate_randomseed(seed_amount):
-            for mH, taus, Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, theta in zip(df['mH'], df['ltime'],
+            for mH, taus, Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, theta, Decay_Width_Total in zip(df['mH'], df['ltime'],
                                                                                                                              df['Br_Hee'], df['Br_HKK'], df['Br_HPiPi'], df['Br_Htautau'], df['Br_HGluon'],
-                                                                                                                             df['Br_Hmumu'], df['Br_Hgaga'], df['Br_H4Pi'], df['Br_Hss'], df['Br_Hcc'], df['theta']):
-                out_put_name_LLP_data = run_save_main41_csv_all_br(mH, seed, br, taus, out_put_path, main41_path, Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, theta)[0]
+                                                                                                                             df['Br_Hmumu'], df['Br_Hgaga'], df['Br_H4Pi'], df['Br_Hss'], df['Br_Hcc'], df['theta'], df['Decay_width_total']):
+                out_put_name_LLP_data = run_save_main41_csv_all_br(mH, seed, br, taus, out_put_path, main41_path, Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, theta, Decay_Width_Total)[0]
                 
                 pbar.update(1)
     out_dir_name = os.path.dirname(out_put_name_LLP_data)

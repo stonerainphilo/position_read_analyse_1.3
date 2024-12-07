@@ -196,7 +196,7 @@ Results:
             ~~~~~~
             IsResonance = true
         ```
-        
+
         The amount of data significantly dropped from 1700+/1kEvent, to 10/1kEvent.
         I think this is due to the amount of Bmesons. Cause:
 
@@ -220,3 +220,16 @@ Results:
     
 
     
+#### 2024-12-04
+
+NEW SULOTION For SETTINGS:
+
+    If we set the mWidth(of BW-Distribution) in Pythia8 as we get in LSD, COULD IT BE ANY USE???
+
+    ```C++
+        pythia.readString("999999:all = GeneralResonance void 0 0 0 " + doubleToScientificString(mA) + " " + doubleToScientificString(mWidth) + " 0 20 " + doubleToScientificString(ctau));
+    ```
+
+    And, Since the Decay_Width is SIGNIFICALLY smaller than mass, I STILL think the ```IsResonace``` should be ```true```. So, I will set above as mentioned. 
+
+NOTED AS ''NEW6''

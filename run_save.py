@@ -114,7 +114,7 @@ def run_save_main41_csv(m, seed, Br, tau, out_path, main_41_path):
     
 def run_save_main41_csv_all_br(m, seed, Br, tau, out_path, main_41_path, 
                                Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,
-                               Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, theta):
+                               Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, theta, Decay_width_total):
     
     mass = str(m)
     Br_str = str(Br)
@@ -135,7 +135,7 @@ def run_save_main41_csv_all_br(m, seed, Br, tau, out_path, main_41_path,
     # print(out_0, err_0)
     # print('command 0 complated')
     mkdir_1(out_dir)
-    command1 = f'./main41 {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {theta}'
+    command1 = f'./main41 {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {theta} {Decay_width_total}'
                                
     process1 = subprocess.Popen(command1, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
     # print('command 1 complated')
