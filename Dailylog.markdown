@@ -233,3 +233,17 @@ NEW SULOTION For SETTINGS:
     And, Since the Decay_Width is SIGNIFICALLY smaller than mass, I STILL think the ```IsResonace``` should be ```true```. So, I will set above as mentioned. 
 
 NOTED AS ''NEW6''
+
+#### 2025-2-26
+
+OK I Vaguely remember how my code works, but completely forget the details. So basically, I'm going to review it and remember it.
+
+    And it reminds me to write a manual THAT ACTUALLY READABLE.
+
+#### 2025-3-2
+
+OKKK I remember lots of details now, like how the hell to run pythia8 and LSD with my code, but my whole dictionary system is just imcomperhensive. And some of my pics gone lost. MAYBE they are in the other computer(I'm using the old MAC)?
+
+About the whloe dictionary system:
+    Unchangable at all. It needs too much of touble. Just Too Much.
+    I might as well start a new folder whenever It is needed.
