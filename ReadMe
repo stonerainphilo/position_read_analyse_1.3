@@ -1,27 +1,18 @@
-### What outernal Package does it need?
-Pythia8 with HepMC, python with certain packages lised.
-```python
-    # import subprocess
-    from datetime import datetime
-    import subprocess
-    import os
-    import csv
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import mplhep as hep
-    import pandas as pd
-    import random
-    from tqdm import tqdm
-    import glob
-    # from mpl_toolkits.mplot3d import Axes3D
-    import matplotlib
-    import PIL
-    # import tkinter
-    from threading import Thread
-```
+### What do I Need to Run the Package?
+    1. Python 3.10.11 or later version
+        (maybe older version can do as well, but I use 3.10.11, and I didn't do any test to ensure it can or cannot progress normally, so I just stick with 3.10.11 to avoid unpredicted trouble)
+        And you need to install quite a few packages. 
+
+    2. Pythia 8
+        (There are some specific requirements for different version of Pythia 8. The code itself is originally writen for an older verison of Pythia 8, but can be used for 8.3, which is the newest version.)
+        
+        PAY ATTENTION:
+        a. Requires Pythia 8 config with HepMC2.
+        b. Requires the path of Pythia 8.
+
 
 ### How to Run This Program?
-    Open the 'generate_save_analyse_judge.ipynb', you will know.
+    Open the 'generate_save_analyse_judge.ipynb', follow the instructions and run cells in order.
     Other .ipynb files are not necessary for simple use.
     ALL .py files are functions needed for necessary run. You don't have to change it unless it's needed for your use. 
     
@@ -30,6 +21,8 @@ Pythia8 with HepMC, python with certain packages lised.
     The csv files contain LLPs 'br, ctau(tau), mass(m), energy(e), momentum(p_x/y/z)'
         'production position(x/y/z_Prod), decay position x/y/z'
         'Whether can be detected (0 is cannot, 1 is can)'
+    
+    To plot, you need to type in the folder path for .csv data files in 'plot.ipynb'.
         
     
 
