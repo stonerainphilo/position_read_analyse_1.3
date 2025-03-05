@@ -10,6 +10,10 @@
         a. Requires Pythia 8 config with HepMC2.
         b. Requires the path of Pythia 8.
 
+    3. Light Scalar Decay(LSD)
+        A package for a new BSM Model, provide calculation of DecayWidth, Branch Functions and etc.
+        
+
 
 ### How to Run This Program?
     Open the 'generate_save_analyse_judge.ipynb', follow the instructions and run cells in order.
@@ -27,3 +31,7 @@
     
 
 
+### The 'ALL IN ONE' FOLDER
+
+    It's a plan to write an interface for Pythia8 and Light Scalar Decay, as well as automatically process the results and data, aimming for simpler and quicker simulation of LLP. 
+    At present, the analyse and functions for Pythia8 are roughly completed and can be used for testing. But functions for LSD are not ready yet. 
