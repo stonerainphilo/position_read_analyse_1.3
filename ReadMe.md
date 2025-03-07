@@ -1,5 +1,5 @@
-- [English](README.md)
-- [中文](README.zh.md)
+- [English](ReadMe.md)
+- [中文](ReadMe.zh.md)
 
 
 ### What do I Need to Run the Package?
