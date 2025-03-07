@@ -12,7 +12,9 @@
 
 
 ### 如何运行程序？
-    打开"generate_save_analyse_judge.ipynb"文件，按照指引顺序执行代码单元。
+    如果你在使用Pythia8.3及其衍生版本，打开'generate_save_analyse_judge_for_pythia83XX.ipynb'以使用；
+    如果你在使用Pythia8.2或其他仍然存在\example\main41.cc的版本，请使用'generate_save_analyse_judge_for_pythia82XX.ipynb'。
+    
     其他.ipynb文件非必需文件，基础使用无需操作。
     所有.py文件是核心功能模块，除非有定制需求，否则无需修改。
 
