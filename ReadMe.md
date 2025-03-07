@@ -1,3 +1,7 @@
+- [English](README.md)
+- [中文](README.zh.md)
+
+
 ### What do I Need to Run the Package?
     1. Python 3.10.11 or later version
         (maybe older version can do as well, but I use 3.10.11, and I didn't do any test to ensure it can or cannot progress normally, so I just stick with 3.10.11 to avoid unpredicted trouble)
