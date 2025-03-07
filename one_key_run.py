@@ -3,7 +3,8 @@ from tqdm import tqdm
 
 from run_save import run_save_main41_csv, add_whether_in_the_detector, add_whether_in_the_detector_without_angle
 from combine import combine_files_precise, combine_files_precise_r
-from loop import loop_ctau_br, loop_ctau_br_certain_seed, loop_mass_ctau, loop_mass_ctau_certain_seed, loop_mass_ctau_given_by_csv, loop_mass_ctau_br_given_by_csv
+from loop import loop_ctau_br, loop_ctau_br_certain_seed, loop_mass_ctau, loop_mass_ctau_given_by_csv, loop_mass_ctau_br_given_by_csv
+from loop import loop_mass_ctau_br_given_by_csv_main131
 from functions_for_run import mkdir_1
 from multiprocessing import Pool
 
@@ -114,18 +115,18 @@ def one_key_run_mass_ctau_simple_ver(mass_lower_lim, mass_upper_lim, mass_array_
     final_files = combine_files_precise(completed_data_dir)
     return LLP_data_path, completed_data_dir, final_files
 
-def one_key_run_mass_ctau_certain_seed(mass_lower_lim, mass_upper_lim, mass_array_length, 
-                 ctau_lower_lim, ctau_upper_lim, ctau_array_length, 
-                 br, seed_array, out_put_path, main41_path):
-    LLP_data_path = loop_mass_ctau_certain_seed(mass_lower_lim, mass_upper_lim, mass_array_length, 
-                ctau_lower_lim, ctau_upper_lim, ctau_array_length, 
-                br, seed_array, out_put_path, main41_path)
-    print('The Generation of LLPs is Completed')
-    completed_data_dir = detect_folder_files(LLP_data_path)[1]
-    print('The LLPs are Judged whether they are Detected or not')
-    final_files = combine_files_precise(os.path.dirname(completed_data_dir))
-    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
-    return LLP_data_path, completed_data_dir, final_files[0]
+# def one_key_run_mass_ctau_certain_seed(mass_lower_lim, mass_upper_lim, mass_array_length, 
+#                  ctau_lower_lim, ctau_upper_lim, ctau_array_length, 
+#                  br, seed_array, out_put_path, main41_path):
+#     LLP_data_path = loop_mass_ctau_certain_seed(mass_lower_lim, mass_upper_lim, mass_array_length, 
+#                 ctau_lower_lim, ctau_upper_lim, ctau_array_length, 
+#                 br, seed_array, out_put_path, main41_path)
+#     print('The Generation of LLPs is Completed')
+#     completed_data_dir = detect_folder_files(LLP_data_path)[1]
+#     print('The LLPs are Judged whether they are Detected or not')
+#     final_files = combine_files_precise(os.path.dirname(completed_data_dir))
+#     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+#     return LLP_data_path, completed_data_dir, final_files[0]
 
 def one_key_run_mass_ctau_given_by_csv(csv_file, br, seed_array, out_put_path, main41_path):
     LLP_data_path = loop_mass_ctau_given_by_csv(csv_file, br, seed_array, out_put_path, main41_path)
@@ -138,6 +139,15 @@ def one_key_run_mass_ctau_given_by_csv(csv_file, br, seed_array, out_put_path, m
 
 def one_key_run_mass_ctau_br_given_by_csv(csv_file, br, seed_array, out_put_path, main41_path):
     LLP_data_path = loop_mass_ctau_br_given_by_csv(csv_file, br, seed_array, out_put_path, main41_path)
+    print('The Generation of LLPs is Completed')
+    completed_data_dir = detect_folder_files_no_calcu(LLP_data_path)[1]
+    print('The LLPs are Judged whether they are Detected or not')
+    final_files = combine_files_precise(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return LLP_data_path, completed_data_dir, final_files
+
+def one_key_run_mass_ctau_br_given_by_csv_main131(csv_file, br, seed_array, out_put_path, main131_path):
+    LLP_data_path = loop_mass_ctau_br_given_by_csv_main131(csv_file, br, seed_array, out_put_path, main131_path)
     print('The Generation of LLPs is Completed')
     completed_data_dir = detect_folder_files_no_calcu(LLP_data_path)[1]
     print('The LLPs are Judged whether they are Detected or not')

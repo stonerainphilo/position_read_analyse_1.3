@@ -12,21 +12,23 @@
 
     3. Light Scalar Decay(LSD)
         A package for a new BSM Model, provide calculation of DecayWidth, Branch Functions and etc.
-        
+
 
 
 ### How to Run This Program?
-    Open the 'generate_save_analyse_judge.ipynb', follow the instructions and run cells in order.
+    Open the 'generate_save_analyse_judge_for_pythia83XX.ipynb'(if you are using the pythia8.2, use `generate_save_analyse_judge_for_pythia82XX.ipynb`), follow the instructions and run cells in order.
+
     Other .ipynb files are not necessary for simple use.
+    
     ALL .py files are functions needed for necessary run. You don't have to change it unless it's needed for your use. 
     
     
 ### What does the Out_put csv files contain?
-    The csv files contain LLPs 'br, ctau(tau), mass(m), energy(e), momentum(p_x/y/z)'
-        'production position(x/y/z_Prod), decay position x/y/z'
-        'Whether can be detected (0 is cannot, 1 is can)'
+    The csv files contain LLPs `br, ctau(tau), mass(m), energy(e), momentum(p_x/y/z)`
+        ``production position(x/y/z_Prod), decay position x/y/z``
+        `Whether can be detected (0 is cannot, 1 is can)`
     
-    To plot, you need to type in the folder path for .csv data files in 'plot.ipynb'.
+    To plot, you need to type in the folder path for .csv data files in `plot.ipynb`.
         
     
 

@@ -250,4 +250,17 @@ About the whloe dictionary system:
 
 #### 2025-3-5
 
-Try to rewrite the 'Readme' document, since the old version is USELESS.
+Rewrite the 'Readme' document, since the old version is USELESS.
+
+Added CN ver of 'Readme', named `Readme_CN.txt`.
+
+
+#### 2025-3-7
+
+Provide support for Pythia83XX in `generate_save_analyse_judge_for_pythia83XX.ipynb`, but it isn't tested yet. The test will be performed LATER.
+
+The old `Juypter Note Book` is now `generate_save_analyse_judge_for_pythia82XX.ipynb`, while removed some functions and instructions no longer needed.
+
+Some functions in `loop.py, one_key_run.py, run_save.py` are added or removed.
+
+Deleted LLP files in github for confidential reasons.
