@@ -21,7 +21,7 @@ def run_T1Aa_csv(m, seed, Br, tau, out_path, T1Aa_path):
     # get error if any
     output, error = process1.communicate()
     
-    # save to txt
+    # save to csv
     out_path = out_dir+"all_DATA_H.csv"
     
     return out_path, out_dir
