@@ -1,4 +1,4 @@
-# Lauguage
+# Language
 
 - [English](ReadMe.md)
 - [中文](ReadMe.zh.md)
