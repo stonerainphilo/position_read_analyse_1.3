@@ -25,6 +25,9 @@
     Other .ipynb files are not necessary for simple use.
     
     ALL .py files are functions needed for necessary run. You don't have to change it unless it's needed for your use. 
+
+# ATTENTION:
+    If you want to use this while customize your Code, please creat another folder outside of the `main` brunch. For you might want to use this repository to get future update, use .gitignore to make sure your personal settings won't mess up others' codespace.
     
     
 ### What does the Out_put csv files contain?
