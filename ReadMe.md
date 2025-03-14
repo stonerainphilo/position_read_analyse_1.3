@@ -20,12 +20,19 @@
         A package for a new BSM Model, provide calculation of DecayWidth, Branch Functions and etc.
 
 ## How to Run This Program?
-
+### For CODEX-b
     Open the 'generate_save_analyse_judge_for_pythia83XX.ipynb'(if you are using the pythia8.2, use `generate_save_analyse_judge_for_pythia82XX.ipynb`), follow the instructions and run cells in order.
 
     Other .ipynb files are not necessary for simple use.
     
     ALL .py files are functions needed for necessary run. You don't have to change it unless it's needed for your use. 
+
+### For other Detectors
+
+    You can use the `ALL_IN_ONE/Detector` Program for any Polygon Detectors to customize your own `generate_save_analyse_judge_for_pythia.ipynb`.
+
+    The Program uses Möller–Trumbore Method for judgement. Yet to aply to any of the 
+    Formal Codes.
 
 ## ATTENTION
 
