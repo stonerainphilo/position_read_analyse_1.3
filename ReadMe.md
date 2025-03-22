@@ -20,6 +20,7 @@
         A package for a new BSM Model, provide calculation of DecayWidth, Branch Functions and etc.
 
 ## How to Run This Program?
+
 ### For CODEX-b
     Open the 'generate_save_analyse_judge_for_pythia83XX.ipynb'(if you are using the pythia8.2, use `generate_save_analyse_judge_for_pythia82XX.ipynb`), follow the instructions and run cells in order.
 
