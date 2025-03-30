@@ -28,6 +28,13 @@
 /test_m_3.0_theta.csv
 /test_m_theta.csv
 /test_m_1theta.csv
+<<<<<<< HEAD
 *.csv
 /*.pyc
 /ALL_IN_ONE/Detector/Detector_test.ipynb
+=======
+/*.csv
+*.pyc
+/ALL_IN_ONE/Detector/Detector_test.ipynb
+/ALL_IN_ONE/TEST_FOR_CROSS_SECTION
+>>>>>>> ccd38f4 (Start Working on Confidencial Calculation:)
