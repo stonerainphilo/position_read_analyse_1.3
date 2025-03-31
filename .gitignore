@@ -31,5 +31,6 @@
 /*.csv
 *.pyc
 *.cpython-310.pyc
+*/__pycache__
 /ALL_IN_ONE/Detector/Detector_test.ipynb
 /ALL_IN_ONE/TEST_FOR_CROSS_SECTION
