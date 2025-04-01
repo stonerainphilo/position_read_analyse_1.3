@@ -22,3 +22,27 @@ def split_csv_into_three_parts(input_csv):
 
 # 示例调用
 # split_csv_into_three_parts("your_file.csv")
+
+
+def split_csv_into_different_parts(input_csv, parts):
+    # 读取 CSV 文件
+    df = pd.read_csv(input_csv)
+    
+    # 计算每部分的大小
+    total_rows = len(df)
+    part_size = total_rows // parts
+    remainder = total_rows % parts  # 处理不能整除的情况
+
+    # 分割数据并保存
+    start = 0
+    for i in range(parts):
+        # 计算每部分的结束索引
+        end = start + part_size + (1 if i < remainder else 0)  # 分配多余的行到前几个部分
+        part = df.iloc[start:end]
+        part.to_csv(f"{i + 1}.csv", index=False)
+        start = end  # 更新起始索引
+
+    print(f"CSV file has been split into {parts} parts.")
+
+# 示例调用
+# split_csv_into_different_parts("your_file.csv", 5)
