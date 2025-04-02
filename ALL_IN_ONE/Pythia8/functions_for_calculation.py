@@ -20,9 +20,9 @@ def calculate_Sin(mphi, Br1 = 6*10**(-8), Br2 = 0.9, g = 2):
     default_Br2 = 0.9
     default_g = 2
     mt = 172.76 
-    mb = 4.18
+    mb = 4.78
     mw = 80.379
-    mc = 1.27
+    mc = 1.67
     Vts = -0.0405
     Vtb = 0.9991
     Vcb = 0.041
@@ -34,7 +34,7 @@ def calculate_Sin(mphi, Br1 = 6*10**(-8), Br2 = 0.9, g = 2):
     return Sin_square
 
 
-def calculate_Br(mphi, sin_square_theta = 6*10**(-8), Br2 = 0.9, g = 2):
+def calculate_Br(mphi, sin_square_theta = 6*10**(-8), Br2 = 0.1, g = 0.65):
     default_Br1 = 6*10**(-8)
     default_Br2 = 0.9
     default_g = 2
@@ -45,12 +45,13 @@ def calculate_Br(mphi, sin_square_theta = 6*10**(-8), Br2 = 0.9, g = 2):
     Vts = -0.0405
     Vtb = 0.9991
     Vcb = 0.041
-    para1 = (256 * np.square(np.pi))/(27 * np.square(g))
+    para1 = (27 * np.square(g))/(256 * np.square(np.pi))
     para2 = (np.square(mt)*np.square(mt))/(np.square(mb)*np.square(mw))
-    para3 = np.square(1-(mphi/mb))/0.51 # 0.51 is The phase space Factor. CITE: Limits on a light Higgs boson
-    para4 = np.square(Vts*Vtb/Vcb)
-    Sin_square = (sin_square_theta*Br2) * para1 * (para2 * para3 * para4)
-    return Sin_square
+    para3 = np.square(1-np.square(mphi/mb))/0.51 # 0.51 is The phase space Factor. CITE: Limits on a light Higgs boson
+    # para4 = np.square(Vts*Vtb/Vcb)
+    para4 = 1
+    Br = (sin_square_theta*Br2) * para1 * (para2 * para3 * para4)
+    return Br
 
 # The calculation formula is in "Searching for Long-lived Particles: A Compact Detector for Exotics at LHCb
 #By Vladimir V. Gligorov,1 Simon Knapen,2, 3 Michele Papucci,2, 3 and Dean J. Robinson4"
