@@ -48,11 +48,17 @@ def calculate_Br(mphi, sin_square_theta = 6*10**(-8), Br2 = 0.1, g = 0.65):
     para1 = (27 * np.square(g))/(256 * np.square(np.pi))
     para2 = (np.square(mt)*np.square(mt))/(np.square(mb)*np.square(mw))
     para3 = np.square(1-np.square(mphi/mb))/0.51 # 0.51 is The phase space Factor. CITE: Limits on a light Higgs boson
+    #Or f(x) = (1-8x+x^2)(1- x^2) - 12x^2 lnx CITE: Light Scalar at FASER
+    # x = np.square(mc/mb)
+    # f = (1-8*x+x**2)*(1-x**2) - 12*x**2*np.log(x)
+    # print(f = 0.511365146826185) 
     # para4 = np.square(Vts*Vtb/Vcb)
     para4 = 1
     Br = (sin_square_theta*Br2) * para1 * (para2 * para3 * para4)
+    # print((Br2) * para1 * (para2 * para4))
     return Br
 
+# calculate_Br(0.1, 6*10**(-8), 0.1, 0.65)
 # The calculation formula is in "Searching for Long-lived Particles: A Compact Detector for Exotics at LHCb
 #By Vladimir V. Gligorov,1 Simon Knapen,2, 3 Michele Papucci,2, 3 and Dean J. Robinson4"
 
