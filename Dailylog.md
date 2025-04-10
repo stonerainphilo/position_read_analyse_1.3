@@ -276,7 +276,7 @@ Fix bugs.
 
 #### 2025-3-30 
 
-Start working on the cross-section and 3-$\sigma$ believance problem. Expecting rule out the unusual mass data from 2.3GeV to 4.7 GeV by calculating Statical cross section and detection effciency. 
+Start working on the cross-section and 3-$\sigma$ significance problem. Expecting rule out the unusual mass data from 2.3GeV to 4.7 GeV by calculating Statical cross section and detection effciency. 
 
 The new work is in the ALL_IN_ONE/Pythia8/.py, but mainly in ALL_IN_ONE/Pythia8/cross_section.py
 
