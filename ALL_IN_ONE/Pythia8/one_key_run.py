@@ -202,3 +202,10 @@ def one_key_run_by_csv_cross_section_main41(csv_file, br, seed_array, out_put_pa
     final_files = combine_files_precise(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return LLP_data_path, completed_data_dir, final_files
+
+def calcu_cross_section_and_combine_files(folder_path_date):
+    completed_data_dir = detect_folder_files_cross_section(folder_path_date)[1]
+    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+    final_files = combine_files_precise(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return completed_data_dir, final_files

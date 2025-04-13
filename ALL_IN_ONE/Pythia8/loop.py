@@ -92,7 +92,7 @@ def loop_mass_ctau_br_given_by_csv(csv_file, br, seed_amount, out_put_path, main
                 pbar.update(1)
     out_dir_name = os.path.dirname(out_put_name_LLP_data)
     
-    return out_dir_name
+    return out_dir_name # Named by Date
 
 def loop_mass_ctau_br_given_by_csv_main131(csv_file, br, seed_amount, out_put_path, main131_path):
     df = pd.read_csv(csv_file)
