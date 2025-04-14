@@ -58,3 +58,19 @@ def combine_files_precise_r(completed_file_path):
         merged_df.to_csv(file_path_combined_detected)
         # df_all.to_csv(file_path_combined)
         return file_path_combined, file_path_combined_detected
+
+
+def merge_csv_files(directory, output_file):
+
+    csv_files = [f for f in os.listdir(directory) if f.endswith('.csv')]
+    
+    data_frames = []
+    for file in csv_files:
+        file_path = os.path.join(directory, file)
+        df = pd.read_csv(file_path)
+        data_frames.append(df)
+
+    merged_df = pd.concat(data_frames, ignore_index=True)
+    
+    merged_df.to_csv(output_file, index=False)
+    print(f"All CSV files have been merged into {output_file}")
