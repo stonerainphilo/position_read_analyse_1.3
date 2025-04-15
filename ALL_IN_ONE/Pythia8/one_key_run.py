@@ -183,9 +183,9 @@ def one_key_run_by_csv_cross_section_main131(csv_file, br, seed_array, out_put_p
     return LLP_data_path, completed_data_dir, final_files
 
 
-def one_key_run_by_csv_cross_section_main131_lower_eff(csv_file, br, seed_array, out_put_path, main131_path, sleep_time = 10): 
+def one_key_run_by_csv_cross_section_main131_lower_eff(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
     print("Running Simulation...")
-    LLP_data_path = loop_mass_ctau_br_given_by_csv_main131_sleep_time(csv_file, br, seed_array, out_put_path, main131_path,sleep_time)
+    LLP_data_path = loop_mass_ctau_br_given_by_csv_main131_sleep_time(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
     print('The Generation of LLPs is Completed')
     completed_data_dir = detect_folder_files_cross_section(LLP_data_path)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
