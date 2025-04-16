@@ -9,7 +9,7 @@ from functions_for_run import mkdir_1
 from multiprocessing import Pool
 
 from run_save import add_whether_in_the_detector_without_Decay_calcu, add_whether_in_the_detector_without_angle_without_Decay_calcu
-from run_save import add_whether_in_the_detector_without_Decay_calcu_add_cross_section
+from run_save import add_whether_in_the_detector_without_Decay_calcu_add_cross_section, add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATHUSLA
 
 
 def detect_folder_files(LLP_data_folder_dir):
@@ -55,6 +55,22 @@ def detect_folder_files_cross_section(LLP_data_folder_dir):
                 file_path_all = ''
 
     return 'Detection and Calcu Cross-Section Completed', completed_data_folder
+
+
+def detect_folder_files_cross_section_CODEX_MATHUSLA(LLP_data_folder_dir):
+    for files in tqdm(os.listdir(LLP_data_folder_dir)):
+        file_path_all = os.path.join(LLP_data_folder_dir, files)
+        if os.path.isfile(file_path_all):
+            try:
+                completed_data_folder = add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATHUSLA(file_path_all, LLP_data_folder_dir)
+            except Exception as e:
+                print(f"Error with file: {file_path_all}")
+                print(f"Error message: {str(e)}")
+                continue
+                file_path_all = ''
+
+    return 'Detection and Calcu Cross-Section Completed', completed_data_folder
+
 
 def detect_folder_files_r(LLP_data_folder_dir):
     # out_put_path = os.path.dirname(LLP_data_folder_dir) + '/detected_llp_data'
@@ -193,6 +209,16 @@ def one_key_run_by_csv_cross_section_main131_lower_eff(csv_file, br, seed_array,
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return LLP_data_path, completed_data_dir, final_files
 
+def one_key_run_by_csv_cross_section_main131_lower_eff_all_detectors(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
+    print("Running Simulation...")
+    LLP_data_path = loop_mass_ctau_br_given_by_csv_main131_sleep_time(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
+    print('The Generation of LLPs is Completed')
+    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(LLP_data_path)[1]
+    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+    final_files = combine_files_precise(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return LLP_data_path, completed_data_dir, final_files
+
 def one_key_run_by_csv_cross_section_main41(csv_file, br, seed_array, out_put_path, main131_path):
     print("Running Simulation...")
     LLP_data_path = loop_mass_ctau_br_given_by_csv(csv_file, br, seed_array, out_put_path, main131_path)
@@ -205,6 +231,13 @@ def one_key_run_by_csv_cross_section_main41(csv_file, br, seed_array, out_put_pa
 
 def calcu_cross_section_and_combine_files(folder_path_date):
     completed_data_dir = detect_folder_files_cross_section(folder_path_date)[1]
+    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+    final_files = combine_files_precise(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return completed_data_dir, final_files
+
+def calcu_cross_section_and_combine_files_CODEX_MATHUSLA(folder_path_date):
+    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(folder_path_date)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
     final_files = combine_files_precise(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
