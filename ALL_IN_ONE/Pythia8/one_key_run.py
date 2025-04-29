@@ -2,7 +2,7 @@ import os
 from tqdm import tqdm
 
 from run_save import run_save_main41_csv, add_whether_in_the_detector, add_whether_in_the_detector_without_angle
-from combine import combine_files_precise, combine_files_precise_r
+from combine import combine_files_precise, combine_files_precise_CODEX_MATHUSLA
 from loop import loop_ctau_br, loop_ctau_br_certain_seed, loop_mass_ctau, loop_mass_ctau_given_by_csv, loop_mass_ctau_br_given_by_csv
 from loop import loop_mass_ctau_br_given_by_csv_main131, loop_mass_ctau_br_given_by_csv_main131_sleep_time, loop_mass_ctau_br_given_by_csv_main131_sleep_time_BKD
 from functions_for_run import mkdir_1
@@ -253,6 +253,6 @@ def calcu_cross_section_and_combine_files(folder_path_date):
 def calcu_cross_section_and_combine_files_CODEX_MATHUSLA(folder_path_date):
     completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(folder_path_date)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
-    final_files = combine_files_precise(completed_data_dir)
+    final_files = combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return completed_data_dir, final_files
