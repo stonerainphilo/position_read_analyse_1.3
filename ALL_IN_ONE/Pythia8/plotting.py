@@ -317,10 +317,10 @@ def plot_with_envelope(csv_file, interpolation='cubic', output_file='envelope_pl
     # Remove rows with NaN or infinite values in relevant columns
     df_threshold_lowest_br = df_threshold_lowest_br.replace([np.inf, -np.inf], np.nan).dropna(subset=['m', 'theta_input', 'detector_acceptance', 'significance_lowest_br'])
     df_threshold = df_threshold.replace([np.inf, -np.inf], np.nan).dropna(subset=['m', 'theta_input', 'detector_acceptance', 'significance_with_4pi'])
-    df_threshold_without_4pi = df_threshold_without_4pi.replace([np.inf, -np.inf], np.nan).dropna(subset=['m', 'theta_input', 'detector_acceptance', 'significance_without_4pi'])
+    # df_threshold_without_4pi = df_threshold_without_4pi.replace([np.inf, -np.inf], np.nan).dropna(subset=['m', 'theta_input', 'detector_acceptance', 'significance_without_4pi'])
     # Subplot 1: No 4Pi
-    axs[0, 0].scatter(df_threshold_without_4pi['m'], np.sin(df_threshold_without_4pi['theta_input'])**2, label='No 4Pi', color='green', s=20, alpha=0.5)
-    add_envelope(axs[0, 0], df_threshold_without_4pi['m'], np.sin(df_threshold_without_4pi['theta_input'])**2, 'No 4Pi', 'green', interpolation)
+    axs[0, 0].scatter(df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['theta_input'])**2, label='Pessimistic', color='green', s=20, alpha=0.5)
+    add_envelope(axs[0, 0], df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['theta_input'])**2, 'Pessimistic', 'green', interpolation)
     axs[0, 0].set_xlim(0.1, 5)
     axs[0, 0].set_ylim(1e-14, 1e-6)
     axs[0, 0].set_title(r'Threshold $3\sigma$', fontsize=20)
@@ -331,8 +331,8 @@ def plot_with_envelope(csv_file, interpolation='cubic', output_file='envelope_pl
     axs[0, 0].legend()
 
     # Subplot 2: With 4Pi
-    axs[0, 1].scatter(df_threshold['m'], np.sin(df_threshold['theta_input'])**2, label=r'With 4Pi ($3\sigma$)', color='blue', s=20, alpha=0.5)
-    add_envelope(axs[0, 1], df_threshold['m'], np.sin(df_threshold['theta_input'])**2, 'With 4Pi', 'blue', interpolation)
+    axs[0, 1].scatter(df_threshold['m'], np.sin(df_threshold['theta_input'])**2, label=r'Precise Br ($3\sigma$)', color='blue', s=20, alpha=0.5)
+    add_envelope(axs[0, 1], df_threshold['m'], np.sin(df_threshold['theta_input'])**2, 'Precise Br Envelope', 'blue', interpolation)
     axs[0, 1].set_xlim(0.1, 5)
     axs[0, 1].set_ylim(1e-14, 1e-6)
     axs[0, 1].set_title(r'Threshold $3\sigma$', fontsize=20)
@@ -343,10 +343,10 @@ def plot_with_envelope(csv_file, interpolation='cubic', output_file='envelope_pl
     axs[0, 1].legend()
 
     # Subplot 3: Combined
-    axs[1, 0].scatter(df_threshold['m'], np.sin(df_threshold['theta_input'])**2, label=r'With 4Pi ($3\sigma$)', color='blue', s=20, alpha=0.5)
-    axs[1, 0].scatter(df_threshold_without_4pi['m'], np.sin(df_threshold_without_4pi['theta_input'])**2, label='No 4Pi with Threshold', color='green', s=20, alpha=0.5)
-    add_envelope(axs[1, 0], df_threshold['m'], np.sin(df_threshold['theta_input'])**2, 'With 4Pi', 'blue', interpolation)
-    add_envelope(axs[1, 0], df_threshold_without_4pi['m'], np.sin(df_threshold_without_4pi['theta_input'])**2, 'No 4Pi', 'green', interpolation)
+    axs[1, 0].scatter(df_threshold['m'], np.sin(df_threshold['theta_input'])**2, label='Precise Br', color='blue', s=20, alpha=0.5)
+    axs[1, 0].scatter(df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['theta_input'])**2, label='Pessimistic', color='green', s=20, alpha=0.5)
+    add_envelope(axs[1, 0], df_threshold['m'], np.sin(df_threshold['theta_input'])**2, 'Precise Br Envelope', 'blue', interpolation)
+    add_envelope(axs[1, 0], df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['theta_input'])**2, 'Pessimistic Envelope', 'green', interpolation)
     axs[1, 0].set_xlim(0.25, 5)
     axs[1, 0].set_ylim(1e-14, 1e-6)
     axs[1, 0].set_title(r'Threshold $3\sigma$', fontsize=20)
@@ -357,11 +357,11 @@ def plot_with_envelope(csv_file, interpolation='cubic', output_file='envelope_pl
     axs[1, 0].legend()
 
     # Subplot 4: Combined with transparency
-    add_envelope(axs[1, 1], df_threshold['m'], np.sin(df_threshold['theta_input'])**2, 'With 4Pi', 'blue', interpolation)
-    add_envelope(axs[1, 1], df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['theta_input'])**2, 'Lowest Br', 'green', interpolation)
+    add_envelope(axs[1, 1], df_threshold['m'], np.sin(df_threshold['theta_input'])**2, 'Precise Br', 'blue', interpolation)
+    add_envelope(axs[1, 1], df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['theta_input'])**2, 'Pessimistic', 'green', interpolation)
     axs[1, 1].set_xlim(0.25, 5)
     axs[1, 1].set_ylim(1e-14, 1e-6)
-    axs[1, 1].set_title('Both Data (Low Alpha for with 4Pi)', fontsize=20)
+    axs[1, 1].set_title('Both Data', fontsize=20)
     axs[1, 1].set_xlabel('mass / GeV', fontsize=15)
     axs[1, 1].set_ylabel('theta^2', fontsize=15)
     axs[1, 1].set_yscale('log')
