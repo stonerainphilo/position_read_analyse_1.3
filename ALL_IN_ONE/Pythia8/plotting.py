@@ -377,3 +377,124 @@ def plot_with_envelope(csv_file, interpolation='cubic', output_file='envelope_pl
     plt.savefig(output_file)
     plt.show()
     plt.close()
+
+def plot_with_envelope_tanb(csv_file, interpolation='cubic', output_file='envelope_plot.png'):
+    # 删除离群点
+    df = pd.read_csv(csv_file)
+
+
+    df['significance_with_4pi'] = df['detector_acceptance'] * fcal.calculate_Br(df['m'], np.sin(df['tanb'])**2, 0.104, 0.653) * 300 * df['Cross_section_fb'] * 1e3
+    df['significance_without_4pi'] = df['detector_acceptance'] * fcal.calculate_Br(df['m'], np.sin(df['tanb'])**2, 0.104, 0.653) * 300 * df['Cross_section_fb'] * 1e3 * df['visible_br_without_4pi']
+    df['significance_lowest_br'] = df['detector_acceptance'] * fcal.calculate_Br(df['m'], np.sin(df['tanb'])**2, 0.104, 0.653) * 300 * df['Cross_section_fb'] * 1e3 * 0.76
+    fig, axs = plt.subplots(2, 2, figsize=(20, 15))
+    df_threshold = df[df['significance_with_4pi'] > 3]
+    df_threshold_without_4pi = df[df['significance_without_4pi'] > 3]
+    df_threshold_lowest_br = df[df['significance_lowest_br'] > 3]
+
+    def add_envelope(ax, x, y, label, color, interpolation='cubic'):
+        """
+        Add an envelope to the given axis and interpolate the upper and lower envelopes.
+
+        Parameters:
+        - ax: matplotlib axis object
+        - x: x data (m)
+        - y: y data (sin^2(tanb))
+        - label: label for the envelope
+        - color: color of the envelope
+        - interpolation: interpolation method ('cubic' or 'quadratic')
+        """
+        # Sort data by x
+        sorted_indices = np.argsort(x)
+        x = np.array(x)[sorted_indices]
+        y = np.array(y)[sorted_indices]
+
+        # Sort upper and lower envelope points
+        unique_x = np.unique(x)
+        upper_envelope_x = []
+        upper_envelope_y = []
+        lower_envelope_x = []
+        lower_envelope_y = []
+
+        for ux in unique_x:
+            mask = x == ux
+            upper_envelope_x.append(ux)
+            upper_envelope_y.append(y[mask].max())  
+            lower_envelope_x.append(ux)
+            lower_envelope_y.append(y[mask].min())  
+
+        # Interpolate the upper and lower envelope
+        x_interp = np.linspace(min(upper_envelope_x), max(upper_envelope_x), 500)
+        upper_interp = interp1d(upper_envelope_x, upper_envelope_y, kind=interpolation, fill_value="extrapolate")
+        lower_interp = interp1d(lower_envelope_x, lower_envelope_y, kind=interpolation, fill_value="extrapolate")
+
+        # generate interpolated values
+        y_upper = upper_interp(x_interp)
+        y_lower = lower_interp(x_interp)
+
+        ax.plot(x_interp, y_upper, color=color, linestyle='--', alpha=0.8)
+        ax.plot(x_interp, y_lower, color=color, linestyle='--', alpha=0.8)
+        ax.fill_between(x_interp, y_lower, y_upper, color=color, alpha=0.1, label=f'Envelope Area ({label})')
+
+    # Remove rows with NaN or infinite values in relevant columns
+    df_threshold_lowest_br = df_threshold_lowest_br.replace([np.inf, -np.inf], np.nan).dropna(subset=['m', 'tanb', 'detector_acceptance', 'significance_lowest_br'])
+    df_threshold = df_threshold.replace([np.inf, -np.inf], np.nan).dropna(subset=['m', 'tanb', 'detector_acceptance', 'significance_with_4pi'])
+    # df_threshold_without_4pi = df_threshold_without_4pi.replace([np.inf, -np.inf], np.nan).dropna(subset=['m', 'tanb', 'detector_acceptance', 'significance_without_4pi'])
+    # Subplot 1: No 4Pi
+    axs[0, 0].scatter(df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['tanb'])**2, label='Pessimistic', color='green', s=20, alpha=0.5)
+    add_envelope(axs[0, 0], df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['tanb'])**2, 'Pessimistic', 'green', interpolation)
+    axs[0, 0].set_xlim(0.1, 5)
+    # axs[0, 0].set_ylim(1e-14, 1e-6)
+    axs[0, 0].set_title(r'Threshold $3\sigma$', fontsize=20)
+    axs[0, 0].set_xlabel('mass / GeV', fontsize=15)
+    axs[0, 0].set_ylabel('theta^2', fontsize=15)
+    axs[0, 0].set_yscale('log')
+    # axs[0, 0].set_xscale('log', base=2)
+    axs[0, 0].legend()
+
+    # Subplot 2: With 4Pi
+    axs[0, 1].scatter(df_threshold['m'], np.sin(df_threshold['tanb'])**2, label=r'Precise Br ($3\sigma$)', color='blue', s=20, alpha=0.5)
+    add_envelope(axs[0, 1], df_threshold['m'], np.sin(df_threshold['tanb'])**2, 'Precise Br Envelope', 'blue', interpolation)
+    axs[0, 1].set_xlim(0.1, 5)
+    # axs[0, 1].set_ylim(1e-14, 1e-6)
+    axs[0, 1].set_title(r'Threshold $3\sigma$', fontsize=20)
+    axs[0, 1].set_xlabel('mass / GeV', fontsize=15)
+    axs[0, 1].set_ylabel('theta^2', fontsize=15)
+    axs[0, 1].set_yscale('log')
+    # axs[0, 1].set_xscale('log', base=2)
+    axs[0, 1].legend()
+
+    # Subplot 3: Combined
+    axs[1, 0].scatter(df_threshold['m'], np.sin(df_threshold['tanb'])**2, label='Precise Br', color='blue', s=20, alpha=0.5)
+    axs[1, 0].scatter(df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['tanb'])**2, label='Pessimistic', color='green', s=20, alpha=0.5)
+    add_envelope(axs[1, 0], df_threshold['m'], np.sin(df_threshold['tanb'])**2, 'Precise Br Envelope', 'blue', interpolation)
+    add_envelope(axs[1, 0], df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['tanb'])**2, 'Pessimistic Envelope', 'green', interpolation)
+    axs[1, 0].set_xlim(0.25, 5)
+    # axs[1, 0].set_ylim(1e-14, 1e-6)
+    axs[1, 0].set_title(r'Threshold $3\sigma$', fontsize=20)
+    axs[1, 0].set_xlabel('mass / GeV', fontsize=15)
+    axs[1, 0].set_ylabel('theta^2', fontsize=15)
+    axs[1, 0].set_yscale('log')
+    # axs[1, 0].set_xscale('log', base=2)
+    axs[1, 0].legend()
+
+    # Subplot 4: Combined with transparency
+    add_envelope(axs[1, 1], df_threshold['m'], np.sin(df_threshold['tanb'])**2, 'Precise Br', 'blue', interpolation)
+    add_envelope(axs[1, 1], df_threshold_lowest_br['m'], np.sin(df_threshold_lowest_br['tanb'])**2, 'Pessimistic', 'green', interpolation)
+    axs[1, 1].set_xlim(0.25, 5)
+    # axs[1, 1].set_ylim(1e-14, 1e-6)
+    axs[1, 1].set_title('Both Data', fontsize=20)
+    axs[1, 1].set_xlabel('mass / GeV', fontsize=15)
+    axs[1, 1].set_ylabel('theta^2', fontsize=15)
+    axs[1, 1].set_yscale('log')
+
+    # Set x-axis to log scale and display 1, 2, 4 as ticks
+    # axs[1, 1].set_xscale('log', base=5)
+    # axs[1, 1].set_xticks([0.5, 1, 5])
+    # axs[1, 1].get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:g}'))
+
+    axs[1, 1].legend()
+
+    plt.tight_layout()
+    plt.savefig(output_file)
+    plt.show()
+    plt.close()
