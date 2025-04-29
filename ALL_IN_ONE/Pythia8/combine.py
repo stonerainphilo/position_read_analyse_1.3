@@ -16,7 +16,7 @@ def combine_files_precise(completed_file_path):
 
                 df = pd.read_csv(file_path)
                 
-                detected_df = df[df['detected'] == 1]
+                detected_df = (df[df['detected'] == 1] | df[df['detected_MATHUSLA'] == 1])
                 merged_df = pd.concat([merged_df, detected_df], ignore_index=True)
                 # df_all = pd.concat(([df_all, df]), ignore_index=True)
                 
