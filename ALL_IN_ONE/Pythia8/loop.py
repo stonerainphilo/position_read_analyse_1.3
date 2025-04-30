@@ -1,7 +1,7 @@
 from functions_for_run import generate_randomseed
 import numpy as np
 from tqdm import tqdm
-from run_save import run_save_main41_csv, run_save_main41_csv_all_br, run_save_main131_csv_all_br_main131, run_save_main131_csv_all_br_2HDM_BKD
+from run_save import run_save_main41_csv, run_save_main41_csv_all_br, run_save_main131_csv_all_br_main131, run_save_main131_csv_all_br_2HDM_BKD, run_save_main131_csv_all_br_2HDM_B
 import pandas as pd
 import os
 import time
@@ -138,6 +138,24 @@ def loop_mass_ctau_br_given_by_csv_main131_sleep_time_BKD(csv_file, br, seed_amo
                                                                                                                              df['Br_Hee'], df['Br_HKK'], df['Br_HPiPi'], df['Br_Htautau'], df['Br_HGluon'],
                                                                                                                              df['Br_Hmumu'], df['Br_Hgaga'], df['Br_H4Pi'], df['Br_Hss'], df['Br_Hcc'], df['tanb'], df['Decay_width_total']):
                 out_put_name_LLP_data = run_save_main131_csv_all_br_2HDM_BKD(mH, seed, br, taus, out_put_path, main131_path, Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, tanb, Decay_Width_Total, today)[0]
+                
+                pbar.update(1)
+                time.sleep(sleep_time)
+    out_dir_name = os.path.dirname(out_put_name_LLP_data)
+    
+    return out_dir_name
+
+
+
+def loop_mass_ctau_br_given_by_csv_main131_sleep_time_B(csv_file, br, seed_amount, out_put_path, main131_path, sleep_time, today):
+    df = pd.read_csv(csv_file)
+    total_iterations = seed_amount * len(df['mH'])
+    with tqdm(total=total_iterations) as pbar:
+        for seed in generate_randomseed(seed_amount):
+            for mH, taus, Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, tanb, Decay_Width_Total in zip(df['mH'], df['ltime'],
+                                                                                                                             df['Br_Hee'], df['Br_HKK'], df['Br_HPiPi'], df['Br_Htautau'], df['Br_HGluon'],
+                                                                                                                             df['Br_Hmumu'], df['Br_Hgaga'], df['Br_H4Pi'], df['Br_Hss'], df['Br_Hcc'], df['tanb'], df['Decay_width_total']):
+                out_put_name_LLP_data = run_save_main131_csv_all_br_2HDM_B(mH, seed, br, taus, out_put_path, main131_path, Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, tanb, Decay_Width_Total, today)[0]
                 
                 pbar.update(1)
                 time.sleep(sleep_time)
