@@ -37,3 +37,4 @@
 .DS_Store
 /Shiyuzhe_Ubuntu_generate_save_analyse_judge_for_pythia83XX_1.ipynb
 /ALL_GOOD_DATA_2/combined.csv
+*.cpython-310.pyc
