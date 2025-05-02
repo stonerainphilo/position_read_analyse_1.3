@@ -29,12 +29,12 @@
 /test_m_theta.csv
 /test_m_1theta.csv
 /*.csv
-*.pyc
-*.cpython-310.pyc
-*/__pycache__
 /ALL_IN_ONE/Detector/Detector_test.ipynb
 /ALL_IN_ONE/TEST_FOR_CROSS_SECTION
 .DS_Store
 /Shiyuzhe_Ubuntu_generate_save_analyse_judge_for_pythia83XX_1.ipynb
 /ALL_GOOD_DATA_2/combined.csv
 *.cpython-310.pyc
+/ALL_IN_ONE/Pythia8/__pycache__/loop.cpython-310.pyc
+/__pycache__
+/ALL_IN_ONE/Pythia8/__pycache__
