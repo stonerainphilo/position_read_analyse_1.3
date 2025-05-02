@@ -386,11 +386,12 @@ def plot_with_envelope_tanb(csv_file, interpolation='cubic', output_file='envelo
     df['significance_with_4pi'] = df['detector_acceptance'] * fcal.calcu_Br_B_to_H(df['m'], df['tanb'], 1/df['tanb'], 600) * 300 * df['Cross_section_fb'] * 1e3
     df['significance_without_4pi'] = df['detector_acceptance'] * fcal.calcu_Br_B_to_H(df['m'], df['tanb'], 1/df['tanb'], 600) * 300 * df['Cross_section_fb'] * 1e3 * df['visible_br_without_4pi']
     df['significance_lowest_br'] = df['detector_acceptance'] * fcal.calcu_Br_B_to_H(df['m'], df['tanb'], 1/df['tanb'], 600) * 300 * df['Cross_section_fb'] * 1e3 * visible_br_lowest
+    df['simple_br'] = df['detector_acceptance'] * fcal.calculate_Br(df['m'], df['tanb'], 0.104, 0.653) * 300 * df['Cross_section_fb'] * 1e3 * df['visible_br_without_4pi']
     fig, axs = plt.subplots(2, 2, figsize=(20, 15))
     df_threshold = df[df['significance_with_4pi'] > 3]
     df_threshold_without_4pi = df[df['significance_without_4pi'] > 3]
     df_threshold_lowest_br = df[df['significance_lowest_br'] > 3]
-
+    df_threshold_simple_br = df[df['simple_br'] > 3]
     def add_envelope(ax, x, y, label, color, interpolation='cubic'):
         """
         Add an envelope to the given axis and interpolate the upper and lower envelopes.
@@ -442,7 +443,7 @@ def plot_with_envelope_tanb(csv_file, interpolation='cubic', output_file='envelo
     # Subplot 1: No 4Pi
     axs[0, 0].scatter(df_threshold_lowest_br['m'], df_threshold_lowest_br['tanb'], label='Pessimistic', color='green', s=20, alpha=0.5)
     add_envelope(axs[0, 0], df_threshold_lowest_br['m'], df_threshold_lowest_br['tanb'], 'Pessimistic', 'green', interpolation)
-    axs[0, 0].set_xlim(0.1, 5)
+    axs[0, 0].set_xlim(min(df['m']), 5)
     # axs[0, 0].set_ylim(1e-14, 1e-6)
     axs[0, 0].set_title(r'Threshold $3\sigma$', fontsize=20)
     axs[0, 0].set_xlabel('mass / GeV', fontsize=15)
@@ -454,7 +455,7 @@ def plot_with_envelope_tanb(csv_file, interpolation='cubic', output_file='envelo
     # Subplot 2: With 4Pi
     axs[0, 1].scatter(df_threshold['m'], df_threshold['tanb'], label=r'Precise Br ($3\sigma$)', color='blue', s=20, alpha=0.5)
     add_envelope(axs[0, 1], df_threshold['m'], df_threshold['tanb'], 'Precise Br Envelope', 'blue', interpolation)
-    axs[0, 1].set_xlim(0.1, 5)
+    axs[0, 1].set_xlim(min(df['m']), 5)
     # axs[0, 1].set_ylim(1e-14, 1e-6)
     axs[0, 1].set_title(r'Threshold $3\sigma$', fontsize=20)
     axs[0, 1].set_xlabel('mass / GeV', fontsize=15)
@@ -468,7 +469,7 @@ def plot_with_envelope_tanb(csv_file, interpolation='cubic', output_file='envelo
     axs[1, 0].scatter(df_threshold_lowest_br['m'], df_threshold_lowest_br['tanb'], label='Pessimistic', color='green', s=20, alpha=0.5)
     add_envelope(axs[1, 0], df_threshold['m'], df_threshold['tanb'], 'Precise Br Envelope', 'blue', interpolation)
     add_envelope(axs[1, 0], df_threshold_lowest_br['m'], df_threshold_lowest_br['tanb'], 'Pessimistic Envelope', 'green', interpolation)
-    axs[1, 0].set_xlim(0.25, 5)
+    axs[1, 0].set_xlim(min(df['m']), 5)
     # axs[1, 0].set_ylim(1e-14, 1e-6)
     axs[1, 0].set_title(r'Threshold $3\sigma$', fontsize=20)
     axs[1, 0].set_xlabel('mass / GeV', fontsize=15)
@@ -480,7 +481,8 @@ def plot_with_envelope_tanb(csv_file, interpolation='cubic', output_file='envelo
     # Subplot 4: Combined with transparency
     add_envelope(axs[1, 1], df_threshold['m'], df_threshold['tanb'], 'Precise Br', 'blue', interpolation)
     add_envelope(axs[1, 1], df_threshold_lowest_br['m'], df_threshold_lowest_br['tanb'], 'Pessimistic', 'green', interpolation)
-    axs[1, 1].set_xlim(0.25, 5)
+    add_envelope(axs[1, 1], df_threshold_simple_br['m'], df_threshold_simple_br['tanb'], 'Simple Br', 'red', interpolation)
+    axs[1, 1].set_xlim(min(df['m']), 5)
     # axs[1, 1].set_ylim(1e-14, 1e-6)
     axs[1, 1].set_title('Both Data', fontsize=20)
     axs[1, 1].set_xlabel('mass / GeV', fontsize=15)
