@@ -127,7 +127,7 @@ def g1(xk, xHpm, tanb):
 def X1(xk, xHpm):
     t1 = (xHpm/(xHpm - xk)) - (6/(xk-1)**2) + 3
     t2 = -1 * xHpm * ((3 * xHpm - 2 * xk)/((xHpm - xk)**2)) * np.log(xHpm)
-    t3 = ((xHpm* (3* xHpm - 2* xk)/(xHpm - xk)**2) + (3*(xk + 1)/(xk -1)**3)) * np.log(xk)
+    t3 = ((xHpm* (3* xHpm - 2* xk)/((xHpm - xk)**2)) + (3*(xk + 1)/((xk -1)**3))) * np.log(xk)
     return (-1/4) * (t1 + t2 + t3)  
 
 def X2(xk, xHpm):
@@ -151,7 +151,7 @@ def f(x):
 
 
 def calcu_lambda_HHpHm(m_H, m_HC, tanb, cosba):
-    lambda_HHpHm = -1 / v * (2 * m_HC**2 - m_H**2) * cosba
+    lambda_HHpHm = (-1 / v) * (2 * m_HC**2 - m_H**2) * cosba
     return lambda_HHpHm
 
 def calcu_lambda_hHpHm(m_H, m_HC, tanb, cosba):
@@ -161,6 +161,7 @@ def calcu_lambda_hHpHm(m_H, m_HC, tanb, cosba):
 
 # 分支比计算
 def calcu_Br_B_to_H(m_phi, tanb, cosba, m_HC = 600.0):
+    # take m_Hpm = 600 GeV
 
     # take m_b = 4.18 GeV 
     m_b = 4.18
@@ -170,7 +171,6 @@ def calcu_Br_B_to_H(m_phi, tanb, cosba, m_HC = 600.0):
     # upper quarks are: k = u, c, t
     quarks = ['u', 'c', 't']
     masses = {'u': m_u, 'c': m_c, 't': m_t}
-    # take m_Hpm = 600 GeV
     m_Hpm = m_HC
     x_Hpm = (m_Hpm**2) / (m_W**2)
     
