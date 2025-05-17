@@ -259,6 +259,55 @@ def run_save_main131_csv_all_br_main131(m, seed, Br, tau, out_path, main_41_path
     
     return out_path, out_dir, mass, seed, tau_str, Br_str   
 
+def run_save_main131_simple(m, seed, Br, tau, out_path, main_41_path, 
+                               theta, today):
+    
+    mass = str(m)
+    Br_str = str(Br)
+    tau_str = str(tau)
+    out_dir = out_path + today +'/' + 'LLP_data/'
+    random_seed = str(seed)
+    
+    mass_line = 'the mass = '
+    seed_line = 'the seed is: '
+    Br_line= 'the Br = '
+    ctau_line = 'the ctau = '
+    # change path
+    os.chdir(main_41_path)
+    # command0 = f'make main131 -j4'
+    # process0 = subprocess.Popen(command0, stdout = subprocess.PIPE, shell = True)
+    # out_0, err_0 = process0.communicate()
+    # print(out_0, err_0)
+    # print('command 0 complated')
+    mkdir_1(out_dir)
+    command1 = f'./main131 {mass} {tau_str} {Br_str} {random_seed} {out_dir} {theta}'
+                               
+    process1 = subprocess.Popen(command1, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # print('command 1 complated')
+    filename = "filtered_mass_" + mass + "_ctau_" + tau_str + "_br_" + Br_str + "_seed_" + random_seed + ".csv"
+    # get error if any
+    output, error = process1.communicate()
+    
+    # save to txt
+    out_path = out_dir+filename
+    # with open(out_path, 'w') as file:
+    #     file.write(seed_line + random_seed + '\n')
+    #     file.write(mass_line + mass + '\n')
+    #     file.write(Br_line + str(Br)+'\n')
+    #     file.write(ctau_line + str(tau))
+    #     file.write(output.decode('utf-8'))
+
+    
+        
+
+    # Save error if any
+    # if error:
+    #     with open('error_'+filename, 'w') as file:
+    #         file.write(error.decode('utf-8'))
+    
+    return out_path, out_dir, mass, seed, tau_str, Br_str   
+
+
 def run_save_main131_csv_all_br_2HDM_BKD(m, seed, Br, tau, out_path, main_41_path, 
                                Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,
                                Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, 

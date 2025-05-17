@@ -7,7 +7,7 @@ from loop import loop_ctau_br, loop_ctau_br_certain_seed, loop_mass_ctau, loop_m
 from loop import loop_mass_ctau_br_given_by_csv_main131, loop_mass_ctau_br_given_by_csv_main131_sleep_time, loop_mass_ctau_br_given_by_csv_main131_sleep_time_BKD, loop_mass_ctau_br_given_by_csv_main131_sleep_time_B
 from functions_for_run import mkdir_1
 from multiprocessing import Pool
-
+import loop as lp
 from run_save import add_whether_in_the_detector_without_Decay_calcu, add_whether_in_the_detector_without_angle_without_Decay_calcu
 from run_save import add_whether_in_the_detector_without_Decay_calcu_add_cross_section, add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATHUSLA
 
@@ -213,6 +213,17 @@ def one_key_run_by_csv_cross_section_main131_lower_eff_all_detectors(csv_file, b
     print("Running Simulation...")
     mkdir_1(out_put_path + today +'/' + 'LLP_data/')
     LLP_data_path = loop_mass_ctau_br_given_by_csv_main131_sleep_time(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
+    print('The Generation of LLPs is Completed')
+    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(LLP_data_path)[1]
+    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+    final_files = combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return LLP_data_path, completed_data_dir, final_files
+
+def one_key_run_by_csv_cross_section_main131_simple(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
+    print("Running Simulation...")
+    mkdir_1(out_put_path + today +'/' + 'LLP_data/')
+    LLP_data_path = lp.loop_mass_simple(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
     print('The Generation of LLPs is Completed')
     completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(LLP_data_path)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
