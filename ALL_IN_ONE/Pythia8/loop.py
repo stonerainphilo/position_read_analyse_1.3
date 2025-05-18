@@ -128,6 +128,21 @@ def loop_mass_simple(csv_file, br, seed_amount, out_put_path, main131_path, slee
     
     return out_dir_name
 
+def loop_mass_simple_2HDM(csv_file, br, seed_amount, out_put_path, main131_path, sleep_time, today):
+    df = pd.read_csv(csv_file)
+    total_iterations = seed_amount * len(df['mH'])
+    with tqdm(total=total_iterations) as pbar:
+        for seed in generate_randomseed(seed_amount):
+            for mH, taus, theta in zip(df['mH'], df['ltime'],
+                                                                                                                             df['tanb']):
+                out_put_name_LLP_data = rs.run_save_main131_simple_2HDM(mH, seed, br, taus, out_put_path, main131_path, theta, today)[0]
+                
+                pbar.update(1)
+                time.sleep(sleep_time)
+    out_dir_name = os.path.dirname(out_put_name_LLP_data)
+    
+    return out_dir_name
+
 
 def loop_mass_ctau_br_given_by_csv_main131_sleep_time(csv_file, br, seed_amount, out_put_path, main131_path, sleep_time, today):
     df = pd.read_csv(csv_file)
