@@ -161,6 +161,7 @@ def calcu_lambda_hHpHm(m_H, m_HC, tanb, cosba):
 
 # 分支比计算
 def calcu_Br_B_to_H(m_phi, tanb, cosba, m_HC = 600.0):
+    # Plot with different tanb to see the effect
     # take m_Hpm = 600 GeV
 
     # take m_b = 4.18 GeV 

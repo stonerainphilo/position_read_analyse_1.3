@@ -56,3 +56,32 @@ def is_point_in_polyhedron(point, vertices, faces):
 # Faces are defined by the indices of the vertices
 
 # print(is_point_in_polyhedron(point, vertices, faces))  
+
+
+
+    """
+    - True: in
+    - False: out
+    """
+    
+    # get the coordinates of the point and the base center
+    px, py, pz = point
+    cx, cy, cz = base_center
+
+    # judge if the point is within the height of the cylinder
+    if cz <= pz <= cz + height:
+        # judge if the point is within the radius of the cylinder
+        distance_to_axis = np.sqrt((px - cx)**2 + (py - cy)**2)
+        if distance_to_axis <= radius:
+            return True
+
+    return False
+
+# # example usage
+# point = [1, 1, 3]  # Example point
+# base_center = [0, 0, 0]  # Center of the base of the cylinder
+# radius = 2  # Radius of the cylinder
+# height = 5  # Height of the cylinder
+
+# result = is_point_in_cylinder(point, base_center, radius, height)
+# print(f"the Point {point} is in the Cylinder: {result}")
