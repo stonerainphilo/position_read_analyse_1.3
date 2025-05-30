@@ -437,6 +437,44 @@ def run_save_main131_csv_all_br_2HDM_B(m, seed, Br, tau, out_path, main_41_path,
     return out_path, out_dir, mass, seed, tau_str, Br_str
 
 
+def main131_2HDM_A(m, seed, Br, tau, out_path, main_41_path, 
+                               tanb, Decay_width_total, today):
+    
+    mass = str(m)
+    Br_str = str(Br)
+    tau_str = str(tau)
+    out_dir = out_path + today +'/' + 'LLP_data/'
+    random_seed = str(seed)
+    
+    mass_line = 'the mass = '
+    seed_line = 'the seed is: '
+    Br_line= 'the Br = '
+    ctau_line = 'the ctau = '
+    # change path
+    os.chdir(main_41_path)
+    # command0 = f'make main131 -j4'
+    # process0 = subprocess.Popen(command0, stdout = subprocess.PIPE, shell = True)
+    # out_0, err_0 = process0.communicate()
+    # print(out_0, err_0)
+    # print('command 0 complated')
+
+    commandB = f'./main131_B_2HDM_A {mass} {tau_str} {Br_str} {random_seed} {out_dir} {tanb} {Decay_width_total}'
+    # commandK = f'./main131_K_2HDM {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {tanb} {Decay_width_total}'
+    # commandD = f'./main131_D_2HDM {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {tanb} {Decay_width_total}'
+    # print(commandB)
+    processB = subprocess.Popen(commandB, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # processK = subprocess.Popen(commandK, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # processD = subprocess.Popen(commandD, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # print('command 1 complated')
+    filename = "filtered_mass_" + mass + "_ctau_" + tau_str + "_br_" + Br_str + "_seed_" + random_seed + ".csv"
+    # get error if any
+    output, error = processB.communicate()
+    # output, error = processK.communicate()
+    # output, error = processD.communicate()
+    # save to txt
+    out_path = out_dir+filename
+    
+    return out_path, out_dir, mass, seed, tau_str, Br_str
 
 
 

@@ -257,6 +257,21 @@ def one_key_run_2HDM_cross_section_main131_lower_eff_all_detectors_B(csv_file, b
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return LLP_data_path, completed_data_dir, final_files
 
+
+def one_key_run_2HDMA_cross_section_main131_lower_eff_all_detectors_B(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
+    print("Running Simulation...")
+    mkdir_1(out_put_path + today +'/' + 'LLP_data/')
+    mkdir_1(out_put_path + today +'/' + 'LLP_data/B_2HDM_A/')
+    # mkdir_1(out_put_path + today +'/' + 'LLP_data/D_2HDM/')
+    # mkdir_1(out_put_path + today +'/' + 'LLP_data/K_2HDM/')
+    LLP_data_path = lp.loop_2HDM_A(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
+    print('The Generation of LLPs is Completed')
+    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(LLP_data_path)[1]
+    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+    final_files = combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return LLP_data_path, completed_data_dir, final_files
+
 def one_key_run_2HDM_cross_section_main131_lower_eff_all_detectors_BKD(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
     print("Running Simulation...")
     mkdir_1(out_put_path + today +'/' + 'LLP_data/')
