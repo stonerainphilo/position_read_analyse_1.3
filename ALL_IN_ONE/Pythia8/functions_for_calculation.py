@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import ALL_IN_ONE.Detector.judge as judge
 L1 = np.sqrt(np.square(5)+np.square(26))
 L2 = np.sqrt(15*15+36*36)
 L2_precise = np.sqrt(15*15+36*36+7*7)
@@ -30,6 +31,28 @@ ctau = 1
 beta = 1
 gamma = 1
 weight_approx = np.exp(-L1/(ctau*beta*gamma))-np.exp(-L2/(ctau*beta*gamma))
+
+vertices = [
+    [750, 2150, 45000],  # SHiP Bottom Vertices
+    [750, -2150, 45000],
+    [-750, -2150, 45000],
+    [-750, 2150, 45000],
+    [2500, 5000, 95000],   # SHiP Top Vertices
+    [2500, -5000, 95000],
+    [-2500, -5000, 95000],
+    [-2500, 5000, 95000]
+    
+]
+
+# Similar to the cube, faces are defined by the indices of the vertices
+faces = [
+    [0, 1, 2, 3],  # Bottom face
+    [4, 5, 6, 7],  # Top face
+    [0, 1, 5, 4],  # Side faces
+    [1, 2, 6, 5],
+    [2, 3, 7, 6],
+    [3, 0, 4, 7]
+]
 
 def f_function(mc, mb): # The real f_function is not this one
     mc = 1.27
@@ -321,3 +344,8 @@ def whether_in_the_detector_by_r(x, y, z, detector_xmin=26000, detector_xmax=360
         (r <= r_max) & (r >= r_min)
     )
     return in_detector.astype(int)#0 is not in detector, 1 is in the detector
+
+def SHiP(x, y, z):
+    point = [x, y, z]
+    result = judge.is_point_in_polyhedron(point, vertices, faces)
+    return result[1]
