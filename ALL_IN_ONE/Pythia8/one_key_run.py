@@ -334,7 +334,7 @@ def calcu_cross_section_and_combine_files_CODEX_MATHUSLA(folder_path_date):
     return completed_data_dir, final_files
 
 def calcu_cross_section_and_combine_files_CODEX_MATHUSLA_SHiP(folder_path_date):
-    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(folder_path_date)[1]
+    completed_data_dir = SHiP_CODEX_MATHUSLA(folder_path_date)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
     final_files = cb.combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
