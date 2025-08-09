@@ -18,6 +18,8 @@ from functions_for_read import get_llp
 from functions_for_calculation import calculate_decay_position, whether_in_the_detector_by_position, whether_in_the_detector_by_r
 import sys
 from cross_section import calculate_cross_section, counting_total_LLP
+import DETECTOR as dt
+
 
 now = datetime.now()
 
@@ -630,6 +632,32 @@ def add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATH
     llp_data['cross_section'] = cross_section
     llp_data['detector_acceptance'] = sum(llp_data['detected']) / counting_total_LLP(llp_data)
     llp_data['detector_acceptance_MATHUSLA'] = sum(llp_data['detected_MATHUSLA']) / counting_total_LLP(llp_data)
+    final_data_folder = file_parent_path_only + '/Completed_llp_data_precise_cross_section'
+    mkdir_1(final_data_folder)
+    final_data_path = os.path.join(final_data_folder + f'/final_data_cross_section_{file_name_only}')
+    llp_data.to_csv(final_data_path, index = False)
+    return final_data_folder
+
+def add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATHUSLA_SHiP(filename, out_folder_path):
+    mkdir_1(out_folder_path)
+    file_path_only, file_name_only = os.path.split(filename)
+    file_parent_path_only = os.path.dirname(file_path_only)
+    llp_data = pd.read_csv(filename)
+    llp_whether_in_detector_SHiP = llp_data.apply(
+        lambda row: dt.SHiP([row['decay_pos_x'], row['decay_pos_y'], row['decay_pos_z']])[0],
+        axis=1
+    )
+    llp_whether_in_detector = whether_in_the_detector_by_position(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'])
+
+    llp_whether_in_detector_MATHUSLA = whether_in_the_detector_by_position(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'], -100000, 100000, 100000, 125000, 100000, 300000)
+    cross_section = calculate_cross_section(llp_data)
+    llp_data['detected'] = llp_whether_in_detector
+    llp_data['detected_MATHUSLA'] = llp_whether_in_detector_MATHUSLA
+    llp_data['detected_SHiP'] = llp_whether_in_detector_SHiP
+    llp_data['cross_section'] = cross_section
+    llp_data['detector_acceptance'] = sum(llp_data['detected']) / counting_total_LLP(llp_data)
+    llp_data['detector_acceptance_MATHUSLA'] = sum(llp_data['detected_MATHUSLA']) / counting_total_LLP(llp_data)
+    llp_data['detector_acceptance_SHiP'] = sum(llp_data['detected_SHiP']) / counting_total_LLP(llp_data)
     final_data_folder = file_parent_path_only + '/Completed_llp_data_precise_cross_section'
     mkdir_1(final_data_folder)
     final_data_path = os.path.join(final_data_folder + f'/final_data_cross_section_{file_name_only}')
