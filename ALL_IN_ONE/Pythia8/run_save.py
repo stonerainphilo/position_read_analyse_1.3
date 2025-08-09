@@ -644,7 +644,7 @@ def add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATH
     file_parent_path_only = os.path.dirname(file_path_only)
     llp_data = pd.read_csv(filename)
     llp_whether_in_detector_SHiP = llp_data.apply(
-        lambda row: dt.SHiP([row['decay_pos_x'], row['decay_pos_y'], row['decay_pos_z']])[0],
+        lambda row: dt.SHiP([row['decay_pos_x'], row['decay_pos_y'], row['decay_pos_z']])[1],
         axis=1
     )
     llp_whether_in_detector = whether_in_the_detector_by_position(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'])
