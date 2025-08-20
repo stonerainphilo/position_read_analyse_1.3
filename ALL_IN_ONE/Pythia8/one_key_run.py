@@ -234,9 +234,9 @@ def one_key_run_by_csv_cross_section_main131_simple(csv_file, br, seed_array, ou
     ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/')
     LLP_data_path = lp.loop_mass_simple(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
     print('The Generation of LLPs is Completed')
-    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(LLP_data_path)[1]
+    completed_data_dir = SHiP_CODEX_MATHUSLA(LLP_data_path)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
-    final_files = cb.combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
+    final_files = cb.combine_files_precise_CODEX_MATHUSLA_SHiP_new_folder(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return LLP_data_path, completed_data_dir, final_files
 
@@ -245,7 +245,7 @@ def one_key_run_by_csv_cross_section_main131_simple_2HDM(csv_file, br, seed_arra
     ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/')
     LLP_data_path = lp.loop_mass_simple_2HDM(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
     print('The Generation of LLPs is Completed')
-    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA(LLP_data_path)[1]
+    completed_data_dir = SHiP_CODEX_MATHUSLA(LLP_data_path)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
     final_files = cb.combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
@@ -277,7 +277,7 @@ def one_key_run_2HDMA_cross_section_main131_lower_eff_all_detectors_B(csv_file, 
     print('The Generation of LLPs is Completed')
     completed_data_dir = SHiP_CODEX_MATHUSLA(LLP_data_path)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
-    final_files = cb.combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
+    final_files = cb.combine_files_precise_CODEX_MATHUSLA_SHiP(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return LLP_data_path, completed_data_dir, final_files
 
