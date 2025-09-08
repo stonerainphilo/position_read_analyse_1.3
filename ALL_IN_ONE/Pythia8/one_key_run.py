@@ -81,6 +81,21 @@ def SHiP_CODEX_MATHUSLA(LLP_data_folder_dir):
 
     return 'Detection and Calcu Cross-Section Completed', completed_data_folder
 
+
+def SHiP(LLP_data_folder_dir):
+    for files in tqdm(os.listdir(LLP_data_folder_dir)):
+        file_path_all = os.path.join(LLP_data_folder_dir, files)
+        if os.path.isfile(file_path_all):
+            try:
+                completed_data_folder = rs.add_whether_in_the_detector_without_Decay_calcu_add_cross_section_SHiP(file_path_all, LLP_data_folder_dir)
+            except Exception as e:
+                print(f"Error with file: {file_path_all}")
+                print(f"Error message: {str(e)}")
+                continue
+                file_path_all = ''
+
+    return 'Detection and Calcu Cross-Section Completed', completed_data_folder
+
 def detect_folder_files_r(LLP_data_folder_dir):
     # out_put_path = os.path.dirname(LLP_data_folder_dir) + '/detected_llp_data'
     for files in tqdm(os.listdir(LLP_data_folder_dir)):
@@ -236,7 +251,18 @@ def one_key_run_by_csv_cross_section_main131_simple(csv_file, br, seed_array, ou
     print('The Generation of LLPs is Completed')
     completed_data_dir = SHiP_CODEX_MATHUSLA(LLP_data_path)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
-    final_files = cb.combine_files_precise_CODEX_MATHUSLA_SHiP_new_folder(completed_data_dir)
+    final_files = cb.combine_files_precise_CODEX_MATHUSLA_SHiP(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return LLP_data_path, completed_data_dir, final_files
+
+def one_key_run_by_csv_cross_section_main131_SHiP(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
+    print("Running Simulation...")
+    ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/')
+    LLP_data_path = lp.loop_mass_simple(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
+    print('The Generation of LLPs is Completed')
+    completed_data_dir = SHiP(LLP_data_path)[1]
+    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+    final_files = cb.combine_files_precise_SHiP(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return LLP_data_path, completed_data_dir, final_files
 

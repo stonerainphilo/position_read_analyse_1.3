@@ -131,9 +131,49 @@ def is_point_in_polyhedron(point, vertices, faces):
 # result = is_point_in_cylinder(point, base_center, radius, height)
 # print(f"the Point {point} is in the Cylinder: {result}")
 
+# void Vec4::bst(const Vec4& pIn) {
+
+#   if (abs(pIn.tt) < Vec4::TINY) return;
+#   double betaX = pIn.xx / pIn.tt;
+#   double betaY = pIn.yy / pIn.tt;
+#   double betaZ = pIn.zz / pIn.tt;
+#   double beta2 = betaX*betaX + betaY*betaY + betaZ*betaZ;
+#   if (beta2 >= 1.) return;
+#   double gamma = 1. / sqrt(1. - beta2);
+#   double prod1 = betaX * xx + betaY * yy + betaZ * zz;
+#   double prod2 = gamma * (gamma * prod1 / (1. + gamma) + tt);
+#   xx          += prod2 * betaX;
+#   yy          += prod2 * betaY;
+#   zz          += prod2 * betaZ;
+#   tt           = gamma * (tt + prod1);
+
+# }
+
+def bst_SHiP(self, beta_z=-0.9977):
+    """
+    zboost to lab frame
+    self: [x, y, z, t]
+    """
+    if abs(beta_z) >= 1.0:
+        print("Warning: beta_z >= 1, boost not performed.")
+        return self
+    
+    # 计算gamma因子
+    gamma = 1.0 / np.sqrt(1.0 - beta_z * beta_z)
+    
+    # 保存原始值
+    t_old = self[3]
+    z_old = self[2]
+    
+    self[3] = gamma * (t_old + beta_z * z_old)
+    self[2] = gamma * (z_old + beta_z * t_old)
+    
+    
+    return [self[0], self[1], self[2]]
+
 
 def SHiP(point):
-    
+
     ray_direction = np.random.rand(3) - 0.5
     ray_direction = ray_direction / np.linalg.norm(ray_direction)  # Normalize the ray direction
     intersections = 0
@@ -147,8 +187,8 @@ def SHiP(point):
                 ray_direction = np.random.rand(3) - 0.5
                 ray_direction = ray_direction / np.linalg.norm(ray_direction)
                 # find a new ray direction that is not parallel to any of the plane
-    for face in SHiPfaces:
-        for i in range(1, len(face) - 1):
+    # for face in SHiPfaces:
+    #     for i in range(1, len(face) - 1):
             v0 = np.array(SHiPvertices[face[0]])
             v1 = np.array(SHiPvertices[face[i]])
             v2 = np.array(SHiPvertices[face[i + 1]])
@@ -157,3 +197,31 @@ def SHiP(point):
                 intersections += 1
 
     return intersections % 2 == 1, intersections
+
+def SHiP_unbstted(point0):
+    point = bst_SHiP(point0)
+    ray_direction = np.random.rand(3) - 0.5
+    ray_direction = ray_direction / np.linalg.norm(ray_direction)  # Normalize the ray direction
+    intersections = 0
+
+    for face in SHiPfaces:
+        for i in range(1, len(face) - 1):
+            v0 = np.array(SHiPvertices[face[0]])
+            v1 = np.array(SHiPvertices[face[i]])
+            v2 = np.array(SHiPvertices[face[i + 1]])
+            while judge_paralle(ray_direction, v0, v1, v2):
+                ray_direction = np.random.rand(3) - 0.5
+                ray_direction = ray_direction / np.linalg.norm(ray_direction)
+                # find a new ray direction that is not parallel to any of the plane
+    # for face in SHiPfaces:
+    #     for i in range(1, len(face) - 1):
+            v0 = np.array(SHiPvertices[face[0]])
+            v1 = np.array(SHiPvertices[face[i]])
+            v2 = np.array(SHiPvertices[face[i + 1]])
+            intersect, t, b1, b2 = moller_trumbore(v0, v1, v2, np.array(point), ray_direction)
+            if intersect:
+                intersections += 1
+
+    return intersections % 2 == 1, intersections
+# print(SHiP([0, 0, 4000, 40000]))  # True
+
