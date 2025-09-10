@@ -313,7 +313,7 @@ def run_Only_2HDMA_main131_SHiP(csv_file, br, seed_array, out_put_path, main131_
     ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/B_2HDM_A/')
     # mkdir_1(out_put_path + today +'/' + 'LLP_data/D_2HDM/')
     # mkdir_1(out_put_path + today +'/' + 'LLP_data/K_2HDM/')
-    LLP_data_path = lp.loop_2HDM_A(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
+    LLP_data_path = lp.loop_2HDM_A_SHiP(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
     print('The Generation of LLPs is Completed')
     return LLP_data_path
 
