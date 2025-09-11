@@ -37,4 +37,4 @@
 *.cpython-310.pyc
 /ALL_IN_ONE/Pythia8/__pycache__/loop.cpython-310.pyc
 **/__pycache__/
-__pycache__/
+!.cc
