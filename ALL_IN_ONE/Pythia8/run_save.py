@@ -18,7 +18,12 @@ from functions_for_read import get_llp
 from functions_for_calculation import calculate_decay_position, whether_in_the_detector_by_position, whether_in_the_detector_by_r
 import sys
 from cross_section import calculate_cross_section, counting_total_LLP
+<<<<<<< HEAD
 import functions_for_calculation as cal
+=======
+import DETECTOR as dt
+
+>>>>>>> fb570907457da2b9b7589cd4404263d4d9b1cabf
 
 now = datetime.now()
 
@@ -477,7 +482,44 @@ def main131_2HDM_A(m, seed, Br, tau, out_path, main_41_path,
     
     return out_path, out_dir, mass, seed, tau_str, Br_str
 
+def main131_2HDM_A_SHiP(m, seed, Br, tau, out_path, main_41_path, 
+                               tanb, Decay_width_total, today):
+    
+    mass = str(m)
+    Br_str = str(Br)
+    tau_str = str(tau)
+    out_dir = out_path + today +'/' + 'LLP_data/'
+    random_seed = str(seed)
+    
+    mass_line = 'the mass = '
+    seed_line = 'the seed is: '
+    Br_line= 'the Br = '
+    ctau_line = 'the ctau = '
+    # change path
+    os.chdir(main_41_path)
+    # command0 = f'make main131 -j4'
+    # process0 = subprocess.Popen(command0, stdout = subprocess.PIPE, shell = True)
+    # out_0, err_0 = process0.communicate()
+    # print(out_0, err_0)
+    # print('command 0 complated')
 
+    commandB = f'./main131_B_2HDM_A_SHiP {mass} {tau_str} {Br_str} {random_seed} {out_dir} {tanb} {Decay_width_total}'
+    # commandK = f'./main131_K_2HDM {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {tanb} {Decay_width_total}'
+    # commandD = f'./main131_D_2HDM {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {tanb} {Decay_width_total}'
+    # print(commandB)
+    processB = subprocess.Popen(commandB, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # processK = subprocess.Popen(commandK, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # processD = subprocess.Popen(commandD, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # print('command 1 complated')
+    filename = "filtered_mass_" + mass + "_ctau_" + tau_str + "_br_" + Br_str + "_seed_" + random_seed + ".csv"
+    # get error if any
+    output, error = processB.communicate()
+    # output, error = processK.communicate()
+    # output, error = processD.communicate()
+    # save to txt
+    out_path = out_dir+filename
+    
+    return out_path, out_dir, mass, seed, tau_str, Br_str
 
 
 def add_typed_in_data(filename, input_file_folder_path =  '/Users/shiyuzhe/Documents/University/LLP/Second_Term/pythia8/BtoKa/auto_data/test_files/'):
@@ -637,12 +679,17 @@ def add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATH
     llp_data.to_csv(final_data_path, index = False)
     return final_data_folder
 
+<<<<<<< HEAD
 
 def SHiP_CODEX_MATHUSLA(filename, out_folder_path):
+=======
+def add_whether_in_the_detector_without_Decay_calcu_add_cross_section_SHiP(filename, out_folder_path):
+>>>>>>> fb570907457da2b9b7589cd4404263d4d9b1cabf
     mkdir_1(out_folder_path)
     file_path_only, file_name_only = os.path.split(filename)
     file_parent_path_only = os.path.dirname(file_path_only)
     llp_data = pd.read_csv(filename)
+<<<<<<< HEAD
     llp_whether_in_detector = whether_in_the_detector_by_position(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'])
     llp_SHiP = cal.SHiP(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'])
     llp_whether_in_detector_MATHUSLA = whether_in_the_detector_by_position(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'], -100000, 100000, 100000, 125000, 100000, 300000)
@@ -653,6 +700,18 @@ def SHiP_CODEX_MATHUSLA(filename, out_folder_path):
     llp_data['cross_section'] = cross_section
     llp_data['detector_acceptance'] = sum(llp_data['detected']) / counting_total_LLP(llp_data)
     llp_data['detector_acceptance_MATHUSLA'] = sum(llp_data['detected_MATHUSLA']) / counting_total_LLP(llp_data)
+=======
+    llp_whether_in_detector_SHiP = llp_data.apply(
+        lambda row: dt.SHiP([row['decay_pos_x'], row['decay_pos_y'], row['decay_pos_z']])[1],
+        axis=1
+    )
+
+
+    cross_section = calculate_cross_section(llp_data)
+
+    llp_data['detected_SHiP'] = llp_whether_in_detector_SHiP
+    llp_data['cross_section'] = cross_section
+>>>>>>> fb570907457da2b9b7589cd4404263d4d9b1cabf
     llp_data['detector_acceptance_SHiP'] = sum(llp_data['detected_SHiP']) / counting_total_LLP(llp_data)
     final_data_folder = file_parent_path_only + '/Completed_llp_data_precise_cross_section'
     mkdir_1(final_data_folder)
