@@ -21,8 +21,8 @@ def detect_folder_files(LLP_data_folder_dir):
             except Exception as e:
                 print(f"Error with file: {file_path_all}")
                 print(f"Error message: {str(e)}")
-                continue
                 file_path_all = ''
+                continue
 
     return 'Detection Completed', completed_data_folder
 
@@ -36,8 +36,8 @@ def detect_folder_files_no_calcu(LLP_data_folder_dir):
             except Exception as e:
                 print(f"Error with file: {file_path_all}")
                 print(f"Error message: {str(e)}")
-                continue
                 file_path_all = ''
+                continue
 
     return 'Detection Completed', completed_data_folder
 
@@ -114,36 +114,49 @@ def SHiP(LLP_data_folder_dir):
     return 'Detection and Calcu Cross-Section Completed', completed_data_folder
 
 def SHiP_low_cpu(LLP_data_folder_dir):
-    # get present progress
-    p = psutil.Process(os.getpid())
-
-    # set upper limit of cpu usage, 50% for now
     CPU_LIMIT = 50
-    
+    error_log_path = os.path.join(LLP_data_folder_dir, "log.txt")
+    print(error_log_path)
+    with open(error_log_path, "a") as error_log:
+        pass  # Ensure the file exists
+
     for files in tqdm(os.listdir(LLP_data_folder_dir)):
         file_path_all = os.path.join(LLP_data_folder_dir, files)
         if os.path.isfile(file_path_all):
             try:
-                
-                
                 while True:
-                    # acquire present usage of cpu
-                    cpu_usage = p.cpu_percent(interval=1)
-
+                    cpu_usage = psutil.cpu_percent(interval=1)  # Get system-wide CPU usage
                     if cpu_usage > CPU_LIMIT:
-                        time.sleep(5)  # pause the progress for a while
-                        
+                        time.sleep(5)  # Pause if CPU usage is too high
+                        with open(error_log_path, "a") as error_log:
+                            now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                            error_log.write(now + f" CPU usage is above {CPU_LIMIT}%. Sleeping.\n")
                     else:
-                        # print the task massage
-                        print(f"CPU usage is below {CPU_LIMIT}%. Proceeding with tasks.")
+                        # Measure CPU usage of the specific function
+                        process = psutil.Process(os.getpid())
+                        cpu_times_before = process.cpu_times()  # Get CPU times before the function call
+
+                        # Call the function
                         completed_data_folder = rs.add_whether_in_the_detector_without_Decay_calcu_add_cross_section_SHiP(file_path_all, LLP_data_folder_dir)
-                        pass
+
+                        cpu_times_after = process.cpu_times()  # Get CPU times after the function call
+
+                        # Calculate CPU usage during the function call
+                        user_time = cpu_times_after.user - cpu_times_before.user
+                        system_time = cpu_times_after.system - cpu_times_before.system
+                        total_time = user_time + system_time
+
+                        with open(error_log_path, "a") as error_log:
+                            now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                            error_log.write(now + f" Function CPU time: {total_time:.2f} seconds\n")
+
+                        break  # Exit the while loop after completing the task
             except Exception as e:
                 print(f"Error with file: {file_path_all}")
                 print(f"Error message: {str(e)}")
                 continue
-                file_path_all = ''
-
+                
+    
     return 'Detection and Calcu Cross-Section Completed', completed_data_folder
 
 
@@ -430,7 +443,7 @@ def calcu_cross_section_and_combine_files_CODEX_MATHUSLA_SHiP(folder_path_date):
 
 
 def calcu_cross_section_and_combine_files_SHiP_limit(folder_path_date):
-    completed_data_dir = SHiP(folder_path_date)[1]
+    completed_data_dir = SHiP_low_cpu(folder_path_date)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
     final_files = cb.combine_files_precise_SHiP(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
