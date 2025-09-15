@@ -6,13 +6,10 @@ import combine as cb
 import functions_for_run as ffr
 from multiprocessing import Pool
 import loop as lp
-<<<<<<< HEAD
-import run_save as rs
-from run_save import add_whether_in_the_detector_without_Decay_calcu, add_whether_in_the_detector_without_angle_without_Decay_calcu
-from run_save import add_whether_in_the_detector_without_Decay_calcu_add_cross_section, add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATHUSLA
-
-=======
->>>>>>> fb570907457da2b9b7589cd4404263d4d9b1cabf
+import psutil
+import time
+import pandas as pd
+from concurrent.futures import ProcessPoolExecutor
 
 def detect_folder_files(LLP_data_folder_dir):
     # out_put_path = os.path.dirname(LLP_data_folder_dir) + '/detected_llp_data'
@@ -24,8 +21,8 @@ def detect_folder_files(LLP_data_folder_dir):
             except Exception as e:
                 print(f"Error with file: {file_path_all}")
                 print(f"Error message: {str(e)}")
-                continue
                 file_path_all = ''
+                continue
 
     return 'Detection Completed', completed_data_folder
 
@@ -39,8 +36,8 @@ def detect_folder_files_no_calcu(LLP_data_folder_dir):
             except Exception as e:
                 print(f"Error with file: {file_path_all}")
                 print(f"Error message: {str(e)}")
-                continue
                 file_path_all = ''
+                continue
 
     return 'Detection Completed', completed_data_folder
 
@@ -115,6 +112,54 @@ def SHiP(LLP_data_folder_dir):
                 file_path_all = ''
 
     return 'Detection and Calcu Cross-Section Completed', completed_data_folder
+
+def SHiP_low_cpu(LLP_data_folder_dir):
+    CPU_LIMIT = 50
+    error_log_path = os.path.join(LLP_data_folder_dir, "log.txt")
+    print(error_log_path)
+    with open(error_log_path, "a") as error_log:
+        pass  # Ensure the file exists
+
+    for files in tqdm(os.listdir(LLP_data_folder_dir)):
+        file_path_all = os.path.join(LLP_data_folder_dir, files)
+        if os.path.isfile(file_path_all):
+            try:
+                while True:
+                    cpu_usage = psutil.cpu_percent(interval=1)  # Get system-wide CPU usage
+                    if cpu_usage > CPU_LIMIT:
+                        time.sleep(5)  # Pause if CPU usage is too high
+                        with open(error_log_path, "a") as error_log:
+                            now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                            error_log.write(now + f" CPU usage is above {CPU_LIMIT}%. Sleeping.\n")
+                    else:
+                        # Measure CPU usage of the specific function
+                        process = psutil.Process(os.getpid())
+                        cpu_times_before = process.cpu_times()  # Get CPU times before the function call
+
+                        # Call the function
+                        completed_data_folder = rs.add_whether_in_the_detector_without_Decay_calcu_add_cross_section_SHiP(file_path_all, LLP_data_folder_dir)
+
+                        cpu_times_after = process.cpu_times()  # Get CPU times after the function call
+
+                        # Calculate CPU usage during the function call
+                        user_time = cpu_times_after.user - cpu_times_before.user
+                        system_time = cpu_times_after.system - cpu_times_before.system
+                        total_time = user_time + system_time
+
+                        with open(error_log_path, "a") as error_log:
+                            now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                            error_log.write(now + f" Function CPU time: {total_time:.2f} seconds\n")
+
+                        break  # Exit the while loop after completing the task
+            except Exception as e:
+                print(f"Error with file: {file_path_all}")
+                print(f"Error message: {str(e)}")
+                continue
+                
+    
+    return 'Detection and Calcu Cross-Section Completed', completed_data_folder
+
+
 
 def detect_folder_files_r(LLP_data_folder_dir):
     # out_put_path = os.path.dirname(LLP_data_folder_dir) + '/detected_llp_data'
@@ -313,39 +358,7 @@ def one_key_run_2HDM_cross_section_main131_lower_eff_all_detectors_B(csv_file, b
     return LLP_data_path, completed_data_dir, final_files
 
 
-<<<<<<< HEAD
-def SHiP_run_H(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10):
-    print("Running Simulation...")
-    mkdir_1(out_put_path + today +'/' + 'LLP_data/')
-    mkdir_1(out_put_path + today +'/' + 'LLP_data/B_2HDM/')
-    # mkdir_1(out_put_path + today +'/' + 'LLP_data/D_2HDM/')
-    # mkdir_1(out_put_path + today +'/' + 'LLP_data/K_2HDM/')
-    LLP_data_path = loop_mass_ctau_br_given_by_csv_main131_sleep_time_B(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
-    print('The Generation of LLPs is Completed')
-    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA_SHiP(LLP_data_path)[1]
-    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
-    final_files = combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
-    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
-    return LLP_data_path, completed_data_dir, final_files    
-
-def SHiP_run_A(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10):
-    print("Running Simulation...")
-    mkdir_1(out_put_path + today +'/' + 'LLP_data/')
-    mkdir_1(out_put_path + today +'/' + 'LLP_data/B_2HDM/')
-    # mkdir_1(out_put_path + today +'/' + 'LLP_data/D_2HDM/')
-    # mkdir_1(out_put_path + today +'/' + 'LLP_data/K_2HDM/')
-    LLP_data_path = lp.loop_2HDM_A(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
-    print('The Generation of LLPs is Completed')
-    completed_data_dir = detect_folder_files_cross_section_CODEX_MATHUSLA_SHiP(LLP_data_path)[1]
-    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
-    final_files = combine_files_precise_CODEX_MATHUSLA(completed_data_dir)
-    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
-    return LLP_data_path, completed_data_dir, final_files    
-
-def one_key_run_2HDMA_cross_section_main131_lower_eff_all_detectors_B(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
-=======
 def one_key_run_2HDMA_cross_section_main131_lower_eff_SHiP(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
->>>>>>> fb570907457da2b9b7589cd4404263d4d9b1cabf
     print("Running Simulation...")
     ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/')
     ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/B_2HDM_A/')
@@ -423,6 +436,14 @@ def calcu_cross_section_and_combine_files_CODEX_MATHUSLA(folder_path_date):
 
 def calcu_cross_section_and_combine_files_CODEX_MATHUSLA_SHiP(folder_path_date):
     completed_data_dir = SHiP(folder_path_date)[1]
+    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+    final_files = cb.combine_files_precise_SHiP(completed_data_dir)
+    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+    return completed_data_dir, final_files
+
+
+def calcu_cross_section_and_combine_files_SHiP_limit(folder_path_date):
+    completed_data_dir = SHiP_low_cpu(folder_path_date)[1]
     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
     final_files = cb.combine_files_precise_SHiP(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
