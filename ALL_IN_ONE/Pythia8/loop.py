@@ -224,3 +224,18 @@ def loop_2HDM_A_SHiP(csv_file, br, seed_amount, out_put_path, main131_path, slee
     out_dir_name = os.path.dirname(out_put_name_LLP_data)
     
     return out_dir_name
+
+def loop_Scalar_SHiP(csv_file, br, seed_amount, out_put_path, main131_path, sleep_time, today):
+    df = pd.read_csv(csv_file)
+    total_iterations = seed_amount * len(df['mH'])
+    with tqdm(total=total_iterations) as pbar:
+        for seed in generate_randomseed(seed_amount):
+            for mH, taus, tanb, Decay_Width_Total in zip(df['mH'], df['ltime'],
+                                                                                                                              df['theta'], df['Decay_width_total']):
+                out_put_name_LLP_data = rs.main131_2HDM_S_SHiP(mH, seed, br, taus, out_put_path, main131_path, tanb, Decay_Width_Total, today)[0]
+                
+                pbar.update(1)
+                time.sleep(sleep_time)
+    out_dir_name = os.path.dirname(out_put_name_LLP_data)
+    
+    return out_dir_name

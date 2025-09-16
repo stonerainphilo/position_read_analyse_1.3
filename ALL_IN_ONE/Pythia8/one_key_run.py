@@ -382,6 +382,16 @@ def run_Only_2HDMA_main131_SHiP(csv_file, br, seed_array, out_put_path, main131_
     print('The Generation of LLPs is Completed')
     return LLP_data_path
 
+def run_Only_Scalar_main131_SHiP(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
+    print("Running Simulation...")
+    ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/')
+    ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/B_2HDM_A/')
+    # mkdir_1(out_put_path + today +'/' + 'LLP_data/D_2HDM/')
+    # mkdir_1(out_put_path + today +'/' + 'LLP_data/K_2HDM/')
+    LLP_data_path = lp.loop_Scalar_SHiP(csv_file, br, seed_array, out_put_path, main131_path, sleep_time, today)
+    print('The Generation of LLPs is Completed')
+    return LLP_data_path
+
 def one_key_run_2HDMA_cross_section_main131_lower_eff_MA_CO_B(csv_file, br, seed_array, out_put_path, main131_path, today, sleep_time = 10): 
     print("Running Simulation...")
     ffr.mkdir_1(out_put_path + today +'/' + 'LLP_data/')
