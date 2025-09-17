@@ -134,8 +134,8 @@ def are_points_inside_using_affine(points, M):
     return inside_x & inside_y & inside_z
 
 
-示例使用
-test_point = np.array([1000, 1000, 70000])
+# 示例使用
+test_point = np.array([1000, 2500, 56000])
 result = is_point_inside_using_affine(test_point, SHiPvertices)
 print(f"点 {test_point} 在棱台内部: {result}")
 

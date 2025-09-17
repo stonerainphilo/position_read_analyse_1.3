@@ -1,7 +1,10 @@
-# from numba import jit
+from numba import jit
 import numpy as np
 import time
 
+
+
+import numpy as np
 
 SHiPvertices = np.array([
     [750, 2150, 45000],  # Bottom Vertices
@@ -20,7 +23,10 @@ SHiPfaces = [
     [2, 3, 7, 6],
     [3, 0, 4, 7]]
 
-# 预处理：计算所有面的平面方程
+# 计算棱台中心点
+center = np.mean(SHiPvertices, axis=0)  # 大约为 [0, 0, 70000]
+
+# 预处理：计算所有面的平面方程，确保法向量指向外部
 planes = []
 for face in SHiPfaces:
     # 取面上的三个点计算法向量
@@ -36,71 +42,67 @@ for face in SHiPfaces:
     normal = np.cross(v1, v2)
     normal = normal / np.linalg.norm(normal)
     
-    # 计算平面方程的D值
+    # 计算平面方程的 D 值
     D = -np.dot(normal, p0)
+    
+    # 检查法向量方向：如果指向内部，则反转
+    # 计算中心点到平面的有符号距离
+    distance_to_center = np.dot(normal, center) + D
+    if distance_to_center > 0:
+        # 法向量指向中心点（内部），需要反转
+        normal = -normal
+        D = -np.dot(normal, p0)
     
     planes.append((normal, D))
 
-# 保存planes供后续使用
-
+# 后续函数保持不变
 def is_point_inside_frustum_optimized(point, planes):
-    """
-    优化版的点是否在棱台内部判断
-    """
-    # 使用预计算的平面方程
     for normal, D in planes:
-        # 计算有符号距离
         distance = normal[0]*point[0] + normal[1]*point[1] + normal[2]*point[2] + D
-        
-        # 如果距离为正，点在外部
-        if distance > 1e-6:  # 使用小的容差值
+        if distance > 1e-6:
             return False
-    
     return True
 
-def are_points_inside_frustum(points, planes):
+# 使用 Numba 加速的函数也需要使用修正后的 planes
+# 注意：需要将 planes 转换为 Numba 兼容格式
+planes_numba = [(np.array(normal, dtype=np.float64), np.float64(D)) for normal, D in planes]
+
+from numba import jit, prange
+
+# 修改函数以处理点数组
+@jit(nopython=True, parallel=True)
+def is_point_inside_frustum_numba_array(points, planes_numba):
     """
-    批量检查多个点是否在棱台内部
+    处理点数组版本的函数
     points: (N, 3)数组，N个点的坐标
     """
-    results = np.ones(len(points), dtype=bool)
+    results = np.empty(len(points), dtype=np.bool_)
     
-    for normal, D in planes:
-        # 计算所有点到当前面的有符号距离
-        distances = np.dot(points, normal) + D
-        
-        # 标记距离为正的点（在外部）
-        outside_mask = distances > 1e-6
-        results[outside_mask] = False
-        
-        # 如果所有点都已标记为外部，提前终止
-        if not np.any(results):
-            break
+    # 使用并行循环
+    for i in prange(len(points)):
+        point = points[i]
+        inside = True
+        for j in range(len(planes_numba)):
+            normal, D = planes_numba[j]
+            distance = normal[0]*point[0] + normal[1]*point[1] + normal[2]*point[2] + D
+            if distance > 1e-6:
+                inside = False
+                break
+        results[i] = inside
     
     return results
 
+# 测试代码
+# test_points = np.random.rand(320000, 3) * 10000  # 生成测试点
 
+# start_time = time.time()
+# results = is_point_inside_frustum_numba_array(test_points, planes_numba)
+# end_time = time.time()
 
-# @jit(nopython=True)
-def is_point_inside_frustum_numba(point, planes):
-    """
-    使用Numba加速的点是否在棱台内部判断
-    """
-    for i in range(len(planes)):
-        normal, D = planes[i]
-        distance = normal[0]*point[0] + normal[1]*point[1] + normal[2]*point[2] + D
-        
-        if distance > 1e-6:
-            return False
-    
-    return True
+# print(f"处理 {len(test_points)} 个点耗时: {end_time - start_time:.4f} 秒")
+# print(f"平均每个点耗时: {(end_time - start_time) / len(test_points) * 1e6:.4f} 微秒")
+# print(f"内部点的数量: {np.sum(results)}")
 
-# 性能测试
-test_points = np.random.rand(10000000, 3) * 10000  # 生成测试点
-
-start_time = time.time()
-results = are_points_inside_frustum(test_points, planes)
-end_time = time.time()
-
-print(f"处理 {len(test_points)} 个点耗时: {end_time - start_time:.4f} 秒")
-print(f"平均每个点耗时: {(end_time - start_time) / len(test_points) * 1e6:.4f} 微秒")
+# point = [1000, 2500, 56000]
+# result = is_point_inside_frustum_numba(point, planes)
+# print(f"点 {point} 在棱台内部: {result}")
