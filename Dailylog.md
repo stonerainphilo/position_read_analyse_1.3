@@ -348,3 +348,33 @@ ________________________________________________________________________________
 
 
                                                                                                                     Simular Results From https://iopscience.iop.org/article/10.1088/1361-6471/ab4cd2/pdf Fig. 28 
+
+
+
+#### 2025-9-17
+
+    IDEA: SET Different detector, 
+
+            |    Similar Name    |       Size        |                 Location                     |       Shape       |       Experimental Plan   |
+            ===========================================================================================================================================
+            |       CODEX-b      |                      detector_xmin=26000, detector_xmax=36000    |                   |   Make it bigger/Smaller  |
+            |                    |                       detector_ymin=-7000, detector_ymax=3000    |        BOX        |   Fix Central Point, Shape|
+            |                    |                      detector_zmin=5000, detector_zmax=15000     |                   |  See how the Reach changes|
+            ============================================================================================================================================
+            |                    |                              xmin = -100000, xmax = 100000,      |                   |                           |
+            |       MATHUSLA     |                              ymin = 100000, ymax = 125000,       |        BOX        |   Move central point      |
+            |                    |                              zmin = 100000, zmax = 300000.       |                   |   Fix Size, Shape         |
+            ============================================================================================================================================
+            |                    |                                                                  |                   |                           |
+            |     Imaginary I    |                                      To be setted                |      Ellipsoid    |   Fix central, make it    |
+            |                    |                                                                  |                   |   bigger, smaller         |
+            ===========================================================================================================================================
+            |                    |                                                                  |                   |                           |
+            |       SHiP         |                                                                  |                   |        Fix shape          |
+            |                    |                                                                  |                   |      Move it around       |
+            =============================================================================================================================================
+
+    IDEA: New SHiP Detect Algarim:
+
+                Linear Transformation, make the pyrmid spuare, to be a BOX. 
+                Find the transformation Matrix for it.
