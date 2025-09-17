@@ -289,3 +289,97 @@ To be updated
 #### 2025-4-14
 
 From 2025-4-10 to 2025-4-14, the data contains m = 0 to m = 3.5.
+
+#### 2025-9-12
+
+Find different Results for Higgs-Scalar-sin^2/theta-mixing, listed below:
+          |              ..
+          |          ...
+          |              ...
+          |                  ...
+          |                      ...
+          |  ......
+          |                          
+          |                          
+          |                          ...
+          |      .....                 .....   
+          |                                  .....
+          |              
+          |          ....                         .....
+          |              ....
+          |                  ......                    ...
+          |                          ....       .....
+          |                                  .....
+          |                        
+          |---------------------------------------------------
+                                    1GeV                           https://arxiv.org/pdf/1504.04956  page177                            Technical Proposal 
+                                                                                                                                A Facility to Search for Hidden
+                                                                                                                                Particles (SHiP) at the CERN SPS
+                                                                                                                                The SHiP Collaboration 
+                                                                                                                                                                        April 2015
+
+____________________________________________________________________________________________________________________________________________________________________________-
+
+          |              ..
+          |          ...
+          |              ...
+          |                  ...
+          |                      ...
+          |  ......
+          |                          
+          |                              ...
+          |                          ...
+          |      .....                       ...
+          |                                       ..
+          |                                         ...
+          |          ....                               . 
+          |              ....                           .
+          |                  ......                    .
+          |                             ...........   .
+          |                          ...           ...
+          |                        
+          |---------------------------------------------------
+                                    1GeV                          
+                                                                    https://arxiv.org/pdf/1809.01876  Fig. 7                 Decay and Detection of a Light Scalar Boson Mixing with the Higgs
+
+                                                                                                                                                                                                    Sept 2018
+
+                                                                                                                    // More fit to our simulation, using this set up.
+
+
+                                                                                                                    Simular Results From https://iopscience.iop.org/article/10.1088/1361-6471/ab4cd2/pdf Fig. 28 
+
+
+
+#### 2025-9-17
+
+    IDEA: SET Different detector, 
+
+            |    Similar Name    |       Size        |                 Location                     |       Shape       |       Experimental Plan   |
+            ===========================================================================================================================================
+            |       CODEX-b      |                      detector_xmin=26000, detector_xmax=36000    |                   |   Make it bigger/Smaller  |
+            |                    |                       detector_ymin=-7000, detector_ymax=3000    |        BOX        |   Fix Central Point, Shape|
+            |                    |                      detector_zmin=5000, detector_zmax=15000     |                   |  See how the Reach changes|
+            ============================================================================================================================================
+            |                    |                              xmin = -100000, xmax = 100000,      |                   |                           |
+            |       MATHUSLA     |                              ymin = 100000, ymax = 125000,       |        BOX        |   Move central point      |
+            |                    |                              zmin = 100000, zmax = 300000.       |                   |   Fix Size, Shape         |
+            ============================================================================================================================================
+            |                    |                                                                  |                   |                           |
+            |     Imaginary I    |                                      To be setted                |      Ellipsoid    |   Fix central, make it    |
+            |                    |                                                                  |                   |   bigger, smaller         |
+            ===========================================================================================================================================
+            |                    |                                                                  |                   |                           |
+            |       SHiP         |                                                                  |                   |        Fix shape          |
+            |                    |                                                                  |                   |      Move it around       |
+            =============================================================================================================================================
+
+    IDEA: New SHiP Detect Algorithm:
+
+                Using Transformation, make the pyrmid spuare, to be a BOX. 
+                Find the transformation Matrix for it.
+
+
+#### 2025-9-18
+
+    New SHiP Detect Algarim completed, not as I Predicted, but finished. New detection algorithm now in ```ALL_IN_ONE.Pythia8.prodect_test.py``` and ```ALL_IN_ONE.Pythia8.SHiP.py```

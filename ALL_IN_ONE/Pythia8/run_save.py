@@ -23,52 +23,6 @@ import DETECTOR as dt
 
 now = datetime.now()
 
-def run_save_main41_txt(m, seed, Br, tau, out_path, main_41_path):
-    
-    mass = str(m)
-    Br_str = str(Br)
-    today = str(datetime.now().date())
-    tau_str = str(tau)
-    out_dir = out_path + today +'/' + 'LLP_data/'
-    random_seed = str(seed)
-    mass_line = 'the mass = '
-    seed_line = 'the seed is: '
-    Br_line= 'the Br = '
-    ctau_line = 'the ctau = '
-    # change path
-    os.chdir(main_41_path)
-    # command0 = f'make main41 -j4'
-    # process0 = subprocess.Popen(command0, stdout = subprocess.PIPE, shell = True)
-    # out_0, err_0 = process0.communicate()
-    # print(out_0, err_0)
-    # print('command 0 complated')
-    mkdir_1(out_dir)
-    command1 = f'./main41 {mass} {tau_str} {Br_str} {random_seed} {out_dir}'
-    process1 = subprocess.Popen(command1, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
-    # print('command 1 complated')
-    filename = "filtered_mass_" + mass + "_ctau_" + tau_str + "_br_" + Br_str + "_seed_" + random_seed + ".csv"
-    # get error if any
-    output, error = process1.communicate()
-    
-    # save to txt
-    out_path = out_dir+filename
-    # with open(out_path, 'w') as file:
-    #     file.write(seed_line + random_seed + '\n')
-    #     file.write(mass_line + mass + '\n')
-    #     file.write(Br_line + str(Br)+'\n')
-    #     file.write(ctau_line + str(tau))
-    #     file.write(output.decode('utf-8'))
-
-    
-        
-
-    # Save error if any
-    # if error:
-    #     with open('error_'+filename, 'w') as file:
-    #         file.write(error.decode('utf-8'))
-    
-    return out_path, mass, seed, out_dir, tau_str, Br_str
-
 def run_save_main41_csv(m, seed, Br, tau, out_path, main_41_path):
     
     mass = str(m)
@@ -161,105 +115,7 @@ def run_save_main131_csv(m, seed, Br, tau, out_path, main_41_path):
     
     return out_path, out_dir, mass, seed, tau_str, Br_str
     
-def run_save_main41_csv_all_br(m, seed, Br, tau, out_path, main_41_path, 
-                               Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,
-                               Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, theta, Decay_width_total):
-    
-    mass = str(m)
-    Br_str = str(Br)
-    today = str(datetime.now().date())
-    tau_str = str(tau)
-    out_dir = out_path + today +'/' + 'LLP_data/'
-    random_seed = str(seed)
-    
-    mass_line = 'the mass = '
-    seed_line = 'the seed is: '
-    Br_line= 'the Br = '
-    ctau_line = 'the ctau = '
-    # change path
-    os.chdir(main_41_path)
-    # command0 = f'make main41 -j4'
-    # process0 = subprocess.Popen(command0, stdout = subprocess.PIPE, shell = True)
-    # out_0, err_0 = process0.communicate()
-    # print(out_0, err_0)
-    # print('command 0 complated')
-    mkdir_1(out_dir)
-    command1 = f'./main41 {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {theta} {Decay_width_total}'
-                               
-    process1 = subprocess.Popen(command1, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
-    # print('command 1 complated')
-    filename = "filtered_mass_" + mass + "_ctau_" + tau_str + "_br_" + Br_str + "_seed_" + random_seed + ".csv"
-    # get error if any
-    output, error = process1.communicate()
-    
-    # save to txt
-    out_path = out_dir+filename
-    # with open(out_path, 'w') as file:
-    #     file.write(seed_line + random_seed + '\n')
-    #     file.write(mass_line + mass + '\n')
-    #     file.write(Br_line + str(Br)+'\n')
-    #     file.write(ctau_line + str(tau))
-    #     file.write(output.decode('utf-8'))
 
-    
-        
-
-    # Save error if any
-    # if error:
-    #     with open('error_'+filename, 'w') as file:
-    #         file.write(error.decode('utf-8'))
-    
-    return out_path, out_dir, mass, seed, tau_str, Br_str    
-
-def run_save_main131_csv_all_br_main131(m, seed, Br, tau, out_path, main_41_path, 
-                               Br_Hee, Br_HKK, Br_HPIPI, Br_Htautau, Br_HGluon,
-                               Br_Hmumu, Br_Hgaga, Br_H4Pi, Br_Hss, Br_Hcc, 
-                               theta, Decay_width_total, today):
-    
-    mass = str(m)
-    Br_str = str(Br)
-    tau_str = str(tau)
-    out_dir = out_path + today +'/' + 'LLP_data/'
-    random_seed = str(seed)
-    
-    mass_line = 'the mass = '
-    seed_line = 'the seed is: '
-    Br_line= 'the Br = '
-    ctau_line = 'the ctau = '
-    # change path
-    os.chdir(main_41_path)
-    # command0 = f'make main131 -j4'
-    # process0 = subprocess.Popen(command0, stdout = subprocess.PIPE, shell = True)
-    # out_0, err_0 = process0.communicate()
-    # print(out_0, err_0)
-    # print('command 0 complated')
-    mkdir_1(out_dir)
-    command1 = f'./main131 {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {theta} {Decay_width_total}'
-                               
-    process1 = subprocess.Popen(command1, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
-    # print('command 1 complated')
-    filename = "filtered_mass_" + mass + "_ctau_" + tau_str + "_br_" + Br_str + "_seed_" + random_seed + ".csv"
-    # get error if any
-    output, error = process1.communicate()
-    
-    # save to txt
-    out_path = out_dir+filename
-    # with open(out_path, 'w') as file:
-    #     file.write(seed_line + random_seed + '\n')
-    #     file.write(mass_line + mass + '\n')
-    #     file.write(Br_line + str(Br)+'\n')
-    #     file.write(ctau_line + str(tau))
-    #     file.write(output.decode('utf-8'))
-
-    
-        
-
-    # Save error if any
-    # if error:
-    #     with open('error_'+filename, 'w') as file:
-    #         file.write(error.decode('utf-8'))
-    
-    return out_path, out_dir, mass, seed, tau_str, Br_str   
 
 def run_save_main131_simple(m, seed, Br, tau, out_path, main_41_path, 
                                theta, today):
@@ -517,6 +373,45 @@ def main131_2HDM_A_SHiP(m, seed, Br, tau, out_path, main_41_path,
     
     return out_path, out_dir, mass, seed, tau_str, Br_str
 
+def main131_2HDM_S_SHiP(m, seed, Br, tau, out_path, main_41_path, 
+                               theta, Decay_width_total, today):
+    
+    mass = str(m)
+    Br_str = str(Br)
+    tau_str = str(tau)
+    out_dir = out_path + today +'/' + 'LLP_data/'
+    random_seed = str(seed)
+    
+    mass_line = 'the mass = '
+    seed_line = 'the seed is: '
+    Br_line= 'the Br = '
+    ctau_line = 'the ctau = '
+    # change path
+    os.chdir(main_41_path)
+    # command0 = f'make main131 -j4'
+    # process0 = subprocess.Popen(command0, stdout = subprocess.PIPE, shell = True)
+    # out_0, err_0 = process0.communicate()
+    # print(out_0, err_0)
+    # print('command 0 complated')
+
+    commandB = f'./main131_B_2HDM_S_SHiP {mass} {tau_str} {Br_str} {random_seed} {out_dir} {theta} {Decay_width_total}'
+    # commandK = f'./main131_K_2HDM {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {tanb} {Decay_width_total}'
+    # commandD = f'./main131_D_2HDM {mass} {tau_str} {Br_str} {random_seed} {out_dir} {Br_Hee} {Br_HKK} {Br_HPIPI} {Br_Htautau} {Br_HGluon} {Br_Hmumu} {Br_Hgaga} {Br_H4Pi} {Br_Hss} {Br_Hcc} {tanb} {Decay_width_total}'
+    # print(commandB)
+    processB = subprocess.Popen(commandB, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # processK = subprocess.Popen(commandK, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # processD = subprocess.Popen(commandD, stdout=subprocess.PIPE, stderr = subprocess.DEVNULL, shell=True)
+    # print('command 1 complated')
+    filename = "filtered_mass_" + mass + "_ctau_" + tau_str + "_br_" + Br_str + "_seed_" + random_seed + ".csv"
+    # get error if any
+    output, error = processB.communicate()
+    # output, error = processK.communicate()
+    # output, error = processD.communicate()
+    # save to txt
+    out_path = out_dir+filename
+    
+    return out_path, out_dir, mass, seed, tau_str, Br_str
+
 
 def add_typed_in_data(filename, input_file_folder_path =  '/Users/shiyuzhe/Documents/University/LLP/Second_Term/pythia8/BtoKa/auto_data/test_files/'):
     pattern = r'm_([0-9\.e-]+)_seed_\d+_br_([0-9\.e-]+)_tau_([0-9\.e-]+)_trimed_events([0-9\.e-]+).csv'
@@ -553,26 +448,7 @@ def add_typed_in_data(filename, input_file_folder_path =  '/Users/shiyuzhe/Docum
 #     add_typed_in_data(files, '/Users/shiyuzhe/Documents/University/LLP/Second_Term/pythia8/BtoKa/auto_data/test_files/')
 
     
-def add_whether_in_the_detector(filename, out_folder_path):
-    mkdir_1(out_folder_path)
-    file_path_only, file_name_only = os.path.split(filename)
-    file_parent_path_only = os.path.dirname(file_path_only)
-    # print(file_path_only)
-    # add_typed_data = add_typed_in_data(file_name_only, file_path_only)
-    # df = pd.read_csv(add_typed_data)
-    llp_data = pd.read_csv(filename)
-    llp_decay_position = calculate_decay_position(llp_data['p_x'], llp_data['p_y'], llp_data['p_z'], llp_data['m'], llp_data['tau'], llp_data['xProd'], llp_data['yProd'], llp_data['zProd'])
-    llp_whether_in_detector = whether_in_the_detector_by_position(llp_decay_position['x'], llp_decay_position['y'], llp_decay_position['z'])
-    llp_data['decay_pos_x'] = llp_decay_position['x']
-    llp_data['decay_pos_y'] = llp_decay_position['y']
-    llp_data['decay_pos_z'] = llp_decay_position['z']
-    llp_data['detected'] = llp_whether_in_detector
-    final_data_folder = file_parent_path_only + '/Completed_llp_data_precise'
-    mkdir_1(final_data_folder)
-    final_data_path = os.path.join(final_data_folder + f'/final_data_{file_name_only}')
-    llp_data.to_csv(final_data_path, index = False)
-    return final_data_folder
-        
+
 def add_whether_in_the_detector_without_Decay_calcu(filename, out_folder_path):
     mkdir_1(out_folder_path)
     file_path_only, file_name_only = os.path.split(filename)
@@ -691,6 +567,49 @@ def add_whether_in_the_detector_without_Decay_calcu_add_cross_section_SHiP(filen
     llp_data['detected_SHiP'] = llp_whether_in_detector_SHiP
     llp_data['cross_section'] = cross_section
     llp_data['detector_acceptance_SHiP'] = sum(llp_data['detected_SHiP']) / counting_total_LLP(llp_data)
+    final_data_folder = file_parent_path_only + '/Completed_llp_data_precise_cross_section'
+    mkdir_1(final_data_folder)
+    final_data_path = os.path.join(final_data_folder + f'/final_data_cross_section_{file_name_only}')
+    llp_data.to_csv(final_data_path, index = False)
+    return final_data_folder
+
+CODEXb_center = [31000.0, -2000.0, 10000.0]
+CODEXb_delta = 5000
+
+def Move_CODEXb_along_Z(filename, out_folder_path, lower_bound = -1, upper_bound = 2):
+    mkdir_1(out_folder_path)
+    file_path_only, file_name_only = os.path.split(filename)
+    file_parent_path_only = os.path.dirname(file_path_only)
+    llp_data = pd.read_csv(filename)
+    for i in range(lower_bound, upper_bound):
+        new_center = [CODEXb_center[0], CODEXb_center[1], CODEXb_center[2] + i * CODEXb_delta]
+        llp_data[f'detected_CODEXb_move_{i}'] = whether_in_the_detector_by_position(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'], 26000, 36000, -7000, 3000, new_center[2]-5000, new_center[2]+5000)        
+        cross_section = calculate_cross_section(llp_data)
+        # llp_data['detected'] = llp_whether_in_detector
+        llp_data[f'cross_section_CODEXb_move_{i}'] = cross_section
+        llp_data['step'] = CODEXb_delta
+        llp_data[f'detector_acceptance_CODEXb_move_{i}'] = sum(llp_data[f'detected_CODEXb_move_{i}']) / counting_total_LLP(llp_data)
+        i = i + 0.1
+    final_data_folder = file_parent_path_only + '/Completed_llp_data_precise_cross_section'
+    mkdir_1(final_data_folder)
+    final_data_path = os.path.join(final_data_folder + f'/final_data_cross_section_{file_name_only}')
+    llp_data.to_csv(final_data_path, index = False)
+    return final_data_folder
+
+def Move_CODEXb_bigger(filename, out_folder_path, lower_bound = -1, upper_bound = 2):
+    mkdir_1(out_folder_path)
+    file_path_only, file_name_only = os.path.split(filename)
+    file_parent_path_only = os.path.dirname(file_path_only)
+    llp_data = pd.read_csv(filename)
+    for i in range(lower_bound, upper_bound):
+        new_center = [CODEXb_center[0], CODEXb_center[1], CODEXb_center[2]]
+        llp_data[f'detected_CODEXb_size_{i}'] = whether_in_the_detector_by_position(llp_data['decay_pos_x'], llp_data['decay_pos_y'], llp_data['decay_pos_z'], new_center[0]-5000*i, new_center[0]+5000*i, new_center[1]-5000*i, new_center[1]+5000*i, new_center[2]-5000*i, new_center[2]+5000*i)        
+        cross_section = calculate_cross_section(llp_data)
+        # llp_data['detected'] = llp_whether_in_detector
+        llp_data[f'cross_section_CODEXb_size_{i}'] = cross_section
+        llp_data['step'] = CODEXb_delta
+        llp_data[f'detector_acceptance_CODEXb_size_{i}'] = sum(llp_data[f'detected_CODEXb_size_{i}']) / counting_total_LLP(llp_data)
+        i = i + 0.1
     final_data_folder = file_parent_path_only + '/Completed_llp_data_precise_cross_section'
     mkdir_1(final_data_folder)
     final_data_path = os.path.join(final_data_folder + f'/final_data_cross_section_{file_name_only}')
