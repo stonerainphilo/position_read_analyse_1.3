@@ -89,7 +89,7 @@ def SHiP_CODEX_MATHUSLA(LLP_data_folder_dir):
         file_path_all = os.path.join(LLP_data_folder_dir, files)
         if os.path.isfile(file_path_all):
             try:
-                completed_data_folder = rs.add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATHUSLA_SHiP(file_path_all, LLP_data_folder_dir)
+                completed_data_folder = rs.add_whether_in_the_detector_without_Decay_calcu_add_cross_section_CODEX_MATHUSLA(file_path_all, LLP_data_folder_dir)
             except Exception as e:
                 print(f"Error with file: {file_path_all}")
                 print(f"Error message: {str(e)}")
@@ -420,15 +420,15 @@ def one_key_run_2HDM_cross_section_main131_lower_eff_all_detectors_BKD(csv_file,
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return LLP_data_path, completed_data_dir, final_files
 
-def one_key_run_by_csv_cross_section_main41(csv_file, br, seed_array, out_put_path, main131_path):
-    print("Running Simulation...")
-    LLP_data_path = lp.loop_mass_ctau_br_given_by_csv(csv_file, br, seed_array, out_put_path, main131_path)
-    print('The Generation of LLPs is Completed')
-    completed_data_dir = detect_folder_files_cross_section(LLP_data_path)[1]
-    print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
-    final_files = cb.combine_files_precise(completed_data_dir)
-    print('The Final Step is Over, See the .csv files for LLPs Completed Data')
-    return LLP_data_path, completed_data_dir, final_files
+# def one_key_run_by_csv_cross_section_main41(csv_file, br, seed_array, out_put_path, main131_path):
+#     print("Running Simulation...")
+#     LLP_data_path = lp.loop_mass_ctau_br_given_by_csv(csv_file, br, seed_array, out_put_path, main131_path)
+#     print('The Generation of LLPs is Completed')
+#     completed_data_dir = detect_folder_files_cross_section(LLP_data_path)[1]
+#     print('The LLPs are Judged whether they are Detected or not, and calculated the cross section')
+#     final_files = cb.combine_files_precise(completed_data_dir)
+#     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+#     return LLP_data_path, completed_data_dir, final_files
 
 def calcu_cross_section_and_combine_files(folder_path_date):
     completed_data_dir = detect_folder_files_cross_section(folder_path_date)[1]
@@ -458,3 +458,20 @@ def calcu_cross_section_and_combine_files_SHiP_limit(folder_path_date):
     final_files = cb.combine_files_precise_SHiP(completed_data_dir)
     print('The Final Step is Over, See the .csv files for LLPs Completed Data')
     return completed_data_dir, final_files
+
+
+def CODEXb_bigger(LLP_data_folder_dir):
+    for files in tqdm(os.listdir(LLP_data_folder_dir)):
+        file_path_all = os.path.join(LLP_data_folder_dir, files)
+        if os.path.isfile(file_path_all):
+            try:
+                completed_data_folder = rs.Move_CODEXb_bigger(file_path_all, LLP_data_folder_dir)
+                final_files = cb.combine_files_move_CODEX(completed_data_folder)
+                print('The Final Step is Over, See the .csv files for LLPs Completed Data')
+            except Exception as e:
+                print(f"Error with file: {file_path_all}")
+                print(f"Error message: {str(e)}")
+                continue
+                file_path_all = ''
+
+    return 'Detection and Calcu Cross-Section Completed', completed_data_folder
