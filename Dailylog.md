@@ -374,7 +374,12 @@ ________________________________________________________________________________
             |                    |                                                                  |                   |      Move it around       |
             =============================================================================================================================================
 
-    IDEA: New SHiP Detect Algarim:
+    IDEA: New SHiP Detect Algorithm:
 
-                Linear Transformation, make the pyrmid spuare, to be a BOX. 
+                Using Transformation, make the pyrmid spuare, to be a BOX. 
                 Find the transformation Matrix for it.
+
+
+#### 2025-9-18
+
+    New SHiP Detect Algarim completed, not as I Predicted, but finished. New detection algorithm now in ```ALL_IN_ONE.Pythia8.prodect_test.py``` and ```ALL_IN_ONE.Pythia8.SHiP.py```
