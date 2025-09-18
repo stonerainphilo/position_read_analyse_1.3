@@ -1,10 +1,15 @@
 import numpy as np
 import pandas as pd
 import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+detector_dir = os.path.abspath(os.path.join(current_dir, '..', 'Detector'))
+sys.path.append(detector_dir)
+import judge
 # sys.path.append("../LSD")
-sys.path.append("/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/ALL_IN_ONE/FIT_FUNC")
-sys.path.append("/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/ALL_IN_ONE/Detector")  # Replace with the actual path to the Detector directory
-import judge as judge
+sys.path.append("../FIT_FUNC")
+sys.path.append("../Detector")  # Replace with the actual path to the Detector directory
+# import judge as judge
 
 L1 = np.sqrt(np.square(5)+np.square(26))
 L2 = np.sqrt(15*15+36*36)
