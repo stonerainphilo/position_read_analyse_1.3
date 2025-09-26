@@ -28,13 +28,20 @@ V_tb = 1.0
 V_ub = 3.5e-3
 V_us = 0.2248
 V_ts = -3.9e-2
+V_ud = 0.97
+V_cd = -0.225
+V_td = 0.008
 
 # upper quark masses in GeV
 m_u = 2.2e-3
 m_c = 1.28
 m_t = 172.57
 m_b = 4.18
-# m_d = 
+m_d = 4.7e-3
+m_s = 93e-3
+
+m_B = 5.28
+m_K = 0.494
 
 
 ctau = 1
@@ -298,6 +305,76 @@ def calcu_Br_B_H_2HDM_I_simple(m_phi, tanb, m_Hpm=600.0):
     t3 = 1/0.506
     t4 = np.square(calculate_xi_bs_simple(tanb, m_Hpm)/V_cb)
     return t1 * t2 * t3 * t4 * 0.104
+
+def calcu_xk(mk, mW):
+    return np.square(mk)/np.square(mW)
+
+
+def calcu_Y1(xH, xk):
+    para1 = -(3*xH*xk - 6*xH - 2*np.square(xk) + 5*xk)/((xk-1)*(xH-xk))
+    para2 = ((xH * (np.square(xH) - 7*xH + 6*xk))/(np.square(xH-xk)*(xH-1))) * np.log(xH)
+    para3 = -np.log(xk)*(np.square(xH) * (np.square(xk)- 2*xk + 4) + 3*np.square(xk) * (2*np.square(xk) - 2*xH -1))/(np.square(xH - xk)*np.square(xk-1))
+    return (para1 + para2 + para3) / 4
+
+def calcu_Y2(xH, xk, xt):
+    # Fix: Use natural logarithm np.log instead of np.log10
+    para1 = xk/(xH-xt)
+    para2 = -1*xH*xk*np.log(xH/xt)/np.square(xH-xk) 
+    return (para1+para2)/2
+
+def calcu_xi_sb_A_simple(mA, mH, tanb):
+    # Make sure these constants are defined before calling this function
+    quarks = ['u', 'c', 't']
+    masses = {'u': m_u, 'c': m_c, 't': m_t}
+    V_bs_A = 0 + 0j  # Initialize as complex number
+    
+    for k in quarks:
+        if k == 'u':
+            Vkb = V_ub
+            Vks = V_us
+        elif k == 'c':
+            Vkb = V_cb
+            Vks = V_cs
+        elif k == 't':
+            Vkb = V_tb
+            Vks = V_ts
+        
+        m_k = masses[k]
+        xk = (m_k**2) / (m_W**2)
+        xH = (mH**2) / (m_W**2)
+        cotb = 1/tanb
+        
+        try:
+            Y1 = calcu_Y1(xH, xk)
+            Y2 = calcu_Y2(xH, xk, (m_t**2)/(m_W**2))
+        except Exception as e:
+            print(f"Error computing Y functions for k={k}: {e}")
+            Y1 = Y2 = 0
+        
+        V_bs_A += Vks.conjugate() * Vkb * (m_k**2) * (Y1*cotb + Y2*cotb**3)
+    
+    xi_bs_A = ((4 * G_F * np.sqrt(2)) * V_bs_A / (16 * np.pi**2))
+    return xi_bs_A
+
+# print(calcu_xi_sb_A_simple(4, 90, 1e5))
+
+def calcu_lambda_A(mB, mK, mA):
+    return (mB - mA - mK)**2 - 4* mA*mK
+
+
+def f0_A(mA):
+    return 0.5905* mA**2 - 0.01571 * mA + 0.3861
+
+def calcu_Br_B_A_2HDM_I(m_A, m_H, tanb):
+    Gamma_B  = 4.018e-13  # GeV
+    f0 = f0_A(m_A**2)
+    lambda_A = calcu_lambda_A(m_B, m_K, m_A)
+    xi = calcu_xi_sb_A_simple(m_A, m_H, tanb)
+    para1 = G_F * xi**2/(32*1.414*3.14)
+    para2 = (m_B**2-m_K**2) * f0**2 / m_B**3
+    para3 = np.sqrt(lambda_A)
+
+    return para1 * para2 * para3 / Gamma_B
 
 
 # calculate_Br(0.1, 6*10**(-8), 0.1, 0.65)
