@@ -7,14 +7,14 @@ import time
 import numpy as np
 
 SHiPvertices = np.array([
-    [750, 2150, 45000],  # Bottom Vertices
-    [750, -2150, 45000],
-    [-750, -2150, 45000],
-    [-750, 2150, 45000],
-    [2500, 5000, 95000],   # Top Vertices
-    [2500, -5000, 95000],
-    [-2500, -5000, 95000],
-    [-2500, 5000, 95000]]) 
+            [750, 2150, 33500],  # Bottom Vertices
+            [750, -2150, 33500],
+            [-750, -2150, 33500],
+            [-750, 2150, 33500],
+            [2500, 5000, 88500],   # Top Vertices
+            [2500, -5000, 88500],
+            [-2500, -5000, 88500],
+            [-2500, 5000, 88500]]) 
 SHiPfaces = [
     [0, 1, 2, 3],  # Bottom face
     [4, 5, 6, 7],  # Top face
@@ -93,8 +93,9 @@ def is_point_inside_frustum_numba_array(points, planes_numba):
     return results
 
 # 测试代码
-# test_points = np.random.rand(320000, 3) * 10000  # 生成测试点
-
+# test_points = np.random.rand(32000, 3) * 10000  # 生成测试点
+# test_points = np.array([[751, 2151, 33501], [0, 0, 70000], [3000, 6000, 90000], [800, 2200, 34000]])
+# print(type(test_points))
 # start_time = time.time()
 # results = is_point_inside_frustum_numba_array(test_points, planes_numba)
 # end_time = time.time()
