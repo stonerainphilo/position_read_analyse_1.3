@@ -386,10 +386,3 @@ ________________________________________________________________________________
 
 
 
-#### 2025-10-24
-
-    1. Based on Overleaf's Abstract, use SuperComputer, complete different planes, Detectors' Location and others. 
-    2. Try to construct a base, similar to DDC.
-    3. Put SHiP On hold.
-    4. 1980s Old Work, simular to SHiP, (A Target)
-        Abstract: analysis of every detector performance(Done), Comparing different scalars(H, A), varying geography(Detector Location), checking luminosity effects(Varying Luminosity), needs several planes(m-tanb-cos(b-a)-mA-mH), such as mass vs tan β: Class based discussion, forward, transverse,(Detector transverse/forward to IP)
