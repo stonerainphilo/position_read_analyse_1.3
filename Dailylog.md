@@ -383,3 +383,13 @@ ________________________________________________________________________________
 #### 2025-9-18
 
     New SHiP Detect Algarim completed, not as I Predicted, but finished. New detection algorithm now in ```ALL_IN_ONE.Pythia8.prodect_test.py``` and ```ALL_IN_ONE.Pythia8.SHiP.py```
+
+
+
+#### 2025-10-24
+
+    1. Based on Overleaf's Abstract, use SuperComputer, complete different planes, Detectors' Location and others. 
+    2. Try to construct a base, similar to DDC.
+    3. Put SHiP On hold.
+    4. 
+        Abstract: analysis of every detector performance(Done), Comparing different scalars(H, A), varying geography(Detector Location), checking luminosity effects(Varying Luminosity), needs several planes(m-tanb-cos(b-a)-mA-mH), such as mass vs tan β: Class based discussion, forward, transverse,(Detector transverse/forward to IP)
