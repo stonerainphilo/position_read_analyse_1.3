@@ -384,5 +384,17 @@ ________________________________________________________________________________
 
     New SHiP Detect Algarim completed, not as I Predicted, but finished. New detection algorithm now in ```ALL_IN_ONE.Pythia8.prodect_test.py``` and ```ALL_IN_ONE.Pythia8.SHiP.py```
 
+#### 2025-11-1
+    About FairSHiP(FS) and its simulation.
+        The FS takes LLP in pythia8 as stable, then uses Geant4 to actually simulate the decay. 
+            Not sure how does it pass the LLP to Geant4 from Pythia8, may cause problem? 
 
+#### 2025-11-4
+
+    FS passes From Pythia8 to Geant4, the Geant4 do the decay of LLP.
+        The decay calcu of Geant4 as follows:(Quote from Geant4's Online Document)
+            Branching Ratios and Decay Channels
+                G4Decay selects a decay mode for the particle according to branching ratios defined in the G4DecayTable class, which is a member of the G4ParticleDefinition class. Each mode is implemented as a class derived from G4VDecayChannel and is responsible for generating the secondaries and the kinematics of the decay. In a given decay channel the daughter particle momenta are calculated in the rest frame of the parent and then boosted into the laboratory frame. Polarization is not currently taken into account for either the parent or its daughters.
+
+        The question is, does the Pythia8 passed the correct B->LLP (affect the ctau of LLP in labframe) appropraitely?
 
