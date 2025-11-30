@@ -398,3 +398,9 @@ ________________________________________________________________________________
 
         The question is, does the Pythia8 passed the correct B->LLP (affect the ctau of LLP in labframe) appropraitely?
 
+
+#### 2025-11-30
+    Try to sim from B-meson, but the Average(```decay_pos_z```) is slighty different from Average(```zProd```). Not big, might just stastic error.
+    But the Sim_decay_z is completely different from Pythia8's. Guessing the decay distribution is off.
+    See  ```ALL_IN_ONE/Momentum_Analyse/test.ipynb``` for detail.
+
