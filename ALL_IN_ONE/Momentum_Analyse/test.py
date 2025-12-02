@@ -152,20 +152,20 @@ def LLP_decay_sim_521(llp_data, B521_data):
     }
 
 # 使用示例
-LLP_data = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/2HDM_H_test1.csv'
-B_521 = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test/2025-11-30_2HDM_B_test/LLP_data/B_521_1.csv'
+# LLP_data = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/2HDM_H_test1.csv'
+# B_521 = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test/2025-11-30_2HDM_B_test/LLP_data/B_521_1.csv'
 
-try:
-    result = LLP_decay_sim_521(LLP_data, B_521)
+# try:
+#     result = LLP_decay_sim_521(LLP_data, B_521)
     
-    print(f"处理了 {result['n_events']} 个事件")
-    print(f"LLP质量: {result['llp_mass']} GeV")
-    print(f"LLP寿命: {result['tau_input']} s")
-    print("\n前5个事件的衰变位置:")
-    for i in range(min(5, result['n_events'])):
-        print(f"事件 {i}: {result['decay_positions'][i]}")
-    df = pd.DataFrame(result['decay_positions'], columns=['decay_pos_x', 'decay_pos_y', 'decay_pos_z'])
-    df['tau'] = result['tau_real']
-    df.to_csv('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test_decay.csv')
-except Exception as e:
-    print(f"Error: {e}")
+#     print(f"处理了 {result['n_events']} 个事件")
+#     print(f"LLP质量: {result['llp_mass']} GeV")
+#     print(f"LLP寿命: {result['tau_input']} s")
+#     print("\n前5个事件的衰变位置:")
+#     for i in range(min(5, result['n_events'])):
+#         print(f"事件 {i}: {result['decay_positions'][i]}")
+#     df = pd.DataFrame(result['decay_positions'], columns=['decay_pos_x', 'decay_pos_y', 'decay_pos_z'])
+#     df['tau'] = result['tau_real']
+#     df.to_csv('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test_decay.csv')
+# except Exception as e:
+#     print(f"Error: {e}")
