@@ -39,3 +39,4 @@
 **/__pycache__/
 !.cc
 /Conference_log.md
+/test/*/.csv
