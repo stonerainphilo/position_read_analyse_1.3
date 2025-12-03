@@ -94,47 +94,47 @@ def generate_decay_position(ltime, momentum, birth_position):
     return decay_position, decay_time
 
 def LLP_decay_sim_521(llp_data, B521_data):
-    # 读取B521数据（多行）
+    # Read B521
     df_B521 = pd.read_csv(B521_data)
     if df_B521.empty:
         raise ValueError("B521 data is empty.")
     
-    # 读取LLP数据（只有一行）
+    # Get LLP
     df_LLP = pd.read_csv(llp_data)
     if df_LLP.empty:
         raise ValueError("LLP data is empty.")
     
-    # 从LLP数据中获取质量和寿命（只有一行）
+    # Get the first LLP
     tau_llp = df_LLP['ltime'].iloc[0]
     mass_llp = df_LLP['mH'].iloc[0]
     
-    # 存储所有事件的结果
+    # Initialization
     all_decay_positions = []
     all_birth_positions = []
     all_momenta = []
     all_B521_indices = []
     all_tau_real = []
     
-    # 对每个B521粒子进行处理
+    # Process Each B521
     for i, B521_row in df_B521.iterrows():
-        # 获取B521的出生位置和动量
+        # Get B521 BirthPlace and 4-Momentum
         llp_birth_pos_521 = B521_row[['decay_pos_x_521', 'decay_pos_y_521', 'decay_pos_z_521']].values
         momentum_B521 = B521_row[['e_521', 'px_521', 'py_521', 'pz_521']].values
         
-        # 生成LLP动量从B521衰变
+        # Generate LLP from B521
         llp_birth_momentum_521, _ = two_body_decay_lab(momentum_B521, 5.279, mass_llp, 0.494)
         
-        # 生成衰变位置
+        # Produce Decay Position
         llp_decay_pos_521, tau = generate_decay_position(tau_llp, llp_birth_momentum_521, llp_birth_pos_521)
         
-        # 存储结果
+        # Save 
         all_decay_positions.append(llp_decay_pos_521)
         all_birth_positions.append(llp_birth_pos_521)
         all_momenta.append(llp_birth_momentum_521)
         all_B521_indices.append(i)
         all_tau_real.append(tau)
     
-    # 转换为numpy数组
+    # Trans to Numpy Array
     all_decay_positions = np.array(all_decay_positions)
     all_birth_positions = np.array(all_birth_positions)
     all_momenta = np.array(all_momenta)
@@ -151,21 +151,21 @@ def LLP_decay_sim_521(llp_data, B521_data):
         'n_events': len(df_B521)
     }
 
-# 使用示例
-# LLP_data = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/2HDM_H_test1.csv'
-# B_521 = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test/2025-11-30_2HDM_B_test/LLP_data/B_521_1.csv'
+# example
+LLP_data = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/2HDM_H_test1.csv'
+B_521 = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test/2025-11-30_2HDM_B_test/LLP_data/B_521_b.csv'
 
-# try:
-#     result = LLP_decay_sim_521(LLP_data, B_521)
+try:
+    result = LLP_decay_sim_521(LLP_data, B_521)
     
-#     print(f"处理了 {result['n_events']} 个事件")
-#     print(f"LLP质量: {result['llp_mass']} GeV")
-#     print(f"LLP寿命: {result['tau_input']} s")
-#     print("\n前5个事件的衰变位置:")
-#     for i in range(min(5, result['n_events'])):
-#         print(f"事件 {i}: {result['decay_positions'][i]}")
-#     df = pd.DataFrame(result['decay_positions'], columns=['decay_pos_x', 'decay_pos_y', 'decay_pos_z'])
-#     df['tau'] = result['tau_real']
-#     df.to_csv('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test_decay.csv')
-# except Exception as e:
-#     print(f"Error: {e}")
+    print(f"Processed {result['n_events']} Events")
+    print(f"LLP Mass: {result['llp_mass']} GeV")
+    print(f"LLP LifeTime: {result['tau_input']} s")
+    print("\nThe first 5 Event's Decay Position:")
+    for i in range(min(5, result['n_events'])):
+        print(f"Event {i}: {result['decay_positions'][i]}")
+    df = pd.DataFrame(result['decay_positions'], columns=['decay_pos_x', 'decay_pos_y', 'decay_pos_z'])
+    df['tau'] = result['tau_real']
+    df.to_csv('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Program/PRA/Github/position_read_analyse_1.3/test/test_decay_b.csv')
+except Exception as e:
+    print(f"Error: {e}")
