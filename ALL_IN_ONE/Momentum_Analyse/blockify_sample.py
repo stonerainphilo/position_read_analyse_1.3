@@ -23,10 +23,24 @@ class BlockConfig:
     position_bin_size: float = 100.0  # 位置分块大小(mm)
     use_position_clustering: bool = False  # 是否使用位置聚类
     position_n_clusters: int = 5  # 位置聚类数量
+    scale: str = "log" # 位置分块缩放方式 ('linear', 'log')
+    # 位置对数选项：当 position_scale='log' 时可以选择按分量或按模取对数
+    position_scale: str = 'log'  # 'linear' or 'log'
+    position_log_mode: str = 'component'  # 'component' or 'magnitude'
+    position_log_eps: float = 1e-12
+    # 当使用位置模对数分箱时，使用多少个径向bins（默认10）
+    position_log_n_bins: int = 10
+    # 动量缩放方式: 'linear' 或 'log'。当为 'log' 时，px/py/pz 使用带符号对数（sign*log10(|x|+eps)），
+    # e 等正值量使用常规 log10(x+eps)
+    momentum_scale: str = 'log'
+    momentum_log_eps: float = 1e-12
+    # 对数模式: 'component' (对每个分量取 signed-log) 或 'magnitude' (仅对动量模取对数)
+    momentum_log_mode: str = 'component'
     
     # 存储配置
     max_particles_per_file: int = 10000  # 每个文件最大粒子数
     compression: str = 'gzip'  # 压缩格式
+
     
     def __post_init__(self):
         if self.momentum_features is None:
@@ -63,6 +77,7 @@ class ParticleBlock:
         
         # 动量统计
         mom_cols = ['px', 'py', 'pz', 'e']
+        
         if all(col in self.particles.columns for col in mom_cols):
             mom_data = self.particles[mom_cols]
             self.momentum_stats = {
@@ -74,7 +89,8 @@ class ParticleBlock:
                 'energy_histogram': self._compute_histogram(mom_data[['e']], bins=20),
                 'momentum_magnitude': np.sqrt(np.sum(mom_data[['px', 'py', 'pz']]**2, axis=1)).tolist()
             }
-    
+
+
     def _compute_histogram(self, data: pd.DataFrame, bins: int = 20) -> Dict:
         """计算直方图"""
         histograms = {}
@@ -159,9 +175,46 @@ class HierarchicalParticleBlocking:
         Returns: 聚类标签数组
         """
         print("Creating momentum clusters...")
-        
-        # 提取动量特征
-        momentum_data = self.data[self.config.momentum_features].values
+        # 提取动量特征并转换为浮点
+        momentum_df = self.data[self.config.momentum_features].astype(float)
+        momentum_data = momentum_df.values
+
+        # 可选: 对动量特征使用对数坐标
+        if getattr(self.config, 'momentum_scale', 'linear') == 'log':
+            eps = getattr(self.config, 'momentum_log_eps', 1e-12)
+            mode = getattr(self.config, 'momentum_log_mode', 'component')
+            if mode == 'component':
+                print("  Applying signed log10 transform to momentum components (px/py/pz)")
+                transformed = np.zeros_like(momentum_data)
+                for j, feat in enumerate(self.config.momentum_features):
+                    col = momentum_df[feat].values
+                    if feat in ['px', 'py', 'pz']:
+                        # 带符号对数：sign(x) * log10(|x| + eps)
+                        transformed[:, j] = np.sign(col) * np.log10(np.abs(col) + eps)
+                    else:
+                        # 对正值量直接取对数
+                        transformed[:, j] = np.log10(col + eps)
+                momentum_data = transformed
+            elif mode == 'magnitude':
+                print("  Applying log10 to momentum magnitude only (p_mag)")
+                # 计算动量模并取对数，再与原始 px/py/pz,e 一起作为聚类特征
+                px = momentum_df['px'].values
+                py = momentum_df['py'].values
+                pz = momentum_df['pz'].values
+                p_mag = np.sqrt(px ** 2 + py ** 2 + pz ** 2)
+                p_mag_log = np.log10(p_mag + eps)
+                # 构造新特征矩阵：将 p_mag_log 放在最前
+                new_cols = [p_mag_log]
+                for feat in self.config.momentum_features:
+                    new_cols.append(momentum_df[feat].values)
+                momentum_data = np.vstack(new_cols).T
+                # 记录 that we added a new column name for later inverse-transform
+                self._momentum_feature_names_used = ['p_mag_log'] + self.config.momentum_features.copy()
+            else:
+                raise ValueError(f"Unsupported momentum_log_mode: {mode}")
+        else:
+            # keep default feature name ordering
+            self._momentum_feature_names_used = self.config.momentum_features.copy()
         
         # 标准化动量数据
         momentum_mean = momentum_data.mean(axis=0)
@@ -188,7 +241,45 @@ class HierarchicalParticleBlocking:
         momentum_labels = kmeans.fit_predict(momentum_normalized)
         
         # 保存聚类中心
-        self.momentum_cluster_centers = kmeans.cluster_centers_ * momentum_std + momentum_mean
+        # 聚类中心先逆归一化回到 momentum_data 表示的空间
+        centers_transformed = kmeans.cluster_centers_ * momentum_std + momentum_mean
+
+        # 如果使用对数坐标，需要把中心点从对数空间反变换回原始（物理）动量坐标
+        if getattr(self.config, 'momentum_scale', 'linear') == 'log':
+            mode = getattr(self.config, 'momentum_log_mode', 'component')
+            eps = getattr(self.config, 'momentum_log_eps', 1e-12)
+            if mode == 'component':
+                centers_original = np.zeros_like(centers_transformed)
+                for j, feat in enumerate(self.config.momentum_features):
+                    col = centers_transformed[:, j]
+                    if feat in ['px', 'py', 'pz']:
+                        # 反变换: sign(t) * (10**(abs(t)) - eps)
+                        centers_original[:, j] = np.sign(col) * (10 ** (np.abs(col)) - eps)
+                    else:
+                        centers_original[:, j] = 10 ** (col) - eps
+                self.momentum_cluster_centers = centers_original
+            elif mode == 'magnitude':
+                # centers_transformed columns correspond to _momentum_feature_names_used
+                names = getattr(self, '_momentum_feature_names_used', self.config.momentum_features)
+                centers_original = np.zeros_like(centers_transformed)
+                for j, name in enumerate(names):
+                    col = centers_transformed[:, j]
+                    if name == 'p_mag_log':
+                        # 反变换到物理 p_mag
+                        centers_original[:, j] = 10 ** (col) - eps
+                    else:
+                        # px/py/pz/e 保持线性
+                        centers_original[:, j] = col
+                # For convenience, also save a dict mapping feature name -> centers
+                self.momentum_cluster_centers = {
+                    name: centers_original[:, idx]
+                    for idx, name in enumerate(names)
+                }
+            else:
+                raise ValueError(f"Unsupported momentum_log_mode: {mode}")
+        else:
+            # 线性空间直接使用逆归一化的值
+            self.momentum_cluster_centers = centers_transformed
         
         print(f"Created {self.config.momentum_n_clusters} momentum clusters")
         
@@ -230,14 +321,23 @@ class HierarchicalParticleBlocking:
             
             if self.config.use_position_clustering:
                 # 使用位置聚类
-                pos_data = cluster_data[['decay_x', 'decay_y', 'decay_z']].values
-                
+                if getattr(self.config, 'position_scale', 'linear') == 'log' and getattr(self.config, 'position_log_mode', 'component') == 'magnitude':
+                    eps = getattr(self.config, 'position_log_eps', 1e-12)
+                    print("  Applying log10 to position magnitude for clustering (r)")
+                    px = cluster_data['decay_x'].values
+                    py = cluster_data['decay_y'].values
+                    pz = cluster_data['decay_z'].values
+                    r = np.sqrt(px ** 2 + py ** 2 + pz ** 2)
+                    pos_data = np.log10(r + eps).reshape(-1, 1)
+                else:
+                    pos_data = cluster_data[['decay_x', 'decay_y', 'decay_z']].values
+
                 # 标准化位置数据
                 pos_mean = pos_data.mean(axis=0)
                 pos_std = pos_data.std(axis=0)
                 pos_std[pos_std == 0] = 1
                 pos_normalized = (pos_data - pos_mean) / pos_std
-                
+
                 # 位置聚类
                 pos_kmeans = KMeans(
                     n_clusters=min(self.config.position_n_clusters, len(cluster_data)),
@@ -261,36 +361,61 @@ class HierarchicalParticleBlocking:
                 # 使用规则网格分块
                 pos_data = cluster_data[['decay_x', 'decay_y', 'decay_z']]
                 
-                # 计算网格范围
-                pos_min = pos_data.min()
-                pos_max = pos_data.max()
-                pos_range = pos_max - pos_min
-                
-                # 计算每个维度的网格数
-                n_bins = np.ceil(pos_range / self.config.position_bin_size).astype(int)
-                n_bins = np.maximum(n_bins, 1)  # 至少1个bin
-                
-                # 创建网格标签
-                for i, coord in enumerate(['decay_x', 'decay_y', 'decay_z']):
-                    bins = np.linspace(pos_min[i], pos_max[i], n_bins[i] + 1)
-                    cluster_data[f'{coord}_bin'] = pd.cut(cluster_data[coord], bins, labels=False)
-                
-                # 遍历所有网格单元
-                for x_bin in range(n_bins[0]):
-                    for y_bin in range(n_bins[1]):
-                        for z_bin in range(n_bins[2]):
-                            mask = (
-                                (cluster_data['decay_x_bin'] == x_bin) &
-                                (cluster_data['decay_y_bin'] == y_bin) &
-                                (cluster_data['decay_z_bin'] == z_bin)
-                            )
-                            
-                            block_data = cluster_data[mask].copy()
-                            
-                            if len(block_data) > 0:
-                                block_id = f"mom_{mom_cluster:03d}_pos_{x_bin:03d}_{y_bin:03d}_{z_bin:03d}"
-                                blocks_dict[block_id] = block_data
-                                block_counter += 1
+                # 使用规则网格分块
+                # 如果配置为位置模对数模式，则按径向 r_log 分箱
+                if getattr(self.config, 'position_scale', 'linear') == 'log' and getattr(self.config, 'position_log_mode', 'component') == 'magnitude':
+                    eps = getattr(self.config, 'position_log_eps', 1e-12)
+                    n_bins = max(1, int(self.config.position_log_n_bins))
+                    px = cluster_data['decay_x'].values
+                    py = cluster_data['decay_y'].values
+                    pz = cluster_data['decay_z'].values
+                    r = np.sqrt(px ** 2 + py ** 2 + pz ** 2)
+                    r_log = np.log10(r + eps)
+                    r_min = r_log.min()
+                    r_max = r_log.max()
+                    bins = np.linspace(r_min, r_max, n_bins + 1)
+                    cluster_data['r_log_bin'] = pd.cut(r_log, bins, labels=False)
+
+                    # 遍历径向分箱
+                    for r_bin in range(n_bins):
+                        mask = (cluster_data['r_log_bin'] == r_bin)
+                        block_data = cluster_data[mask].copy()
+                        if len(block_data) > 0:
+                            block_id = f"mom_{mom_cluster:03d}_pos_r_{r_bin:03d}"
+                            blocks_dict[block_id] = block_data
+                            block_counter += 1
+                else:
+                    # 计算网格范围
+                    pos_data = cluster_data[['decay_x', 'decay_y', 'decay_z']]
+                    pos_min = pos_data.min()
+                    pos_max = pos_data.max()
+                    pos_range = pos_max - pos_min
+
+                    # 计算每个维度的网格数
+                    n_bins = np.ceil(pos_range / self.config.position_bin_size).astype(int)
+                    n_bins = np.maximum(n_bins, 1)  # 至少1个bin
+
+                    # 创建网格标签
+                    for i, coord in enumerate(['decay_x', 'decay_y', 'decay_z']):
+                        bins = np.linspace(pos_min[i], pos_max[i], n_bins[i] + 1)
+                        cluster_data[f'{coord}_bin'] = pd.cut(cluster_data[coord], bins, labels=False)
+
+                    # 遍历所有网格单元
+                    for x_bin in range(n_bins[0]):
+                        for y_bin in range(n_bins[1]):
+                            for z_bin in range(n_bins[2]):
+                                mask = (
+                                    (cluster_data['decay_x_bin'] == x_bin) &
+                                    (cluster_data['decay_y_bin'] == y_bin) &
+                                    (cluster_data['decay_z_bin'] == z_bin)
+                                )
+
+                                block_data = cluster_data[mask].copy()
+
+                                if len(block_data) > 0:
+                                    block_id = f"mom_{mom_cluster:03d}_pos_{x_bin:03d}_{y_bin:03d}_{z_bin:03d}"
+                                    blocks_dict[block_id] = block_data
+                                    block_counter += 1
         
         print(f"\nCreated {block_counter} total blocks")
         return blocks_dict
@@ -564,16 +689,20 @@ class HierarchicalParticleBlocking:
 if __name__ == "__main__":
     # 配置分块参数
     config = BlockConfig(
-        momentum_n_clusters=3000,  # 8个动量聚类
-        position_bin_size=50.0,  # 50mm的位置网格
+        momentum_n_clusters=5000,  # 8个动量聚类
+        position_bin_size=1000.0,  # 50mm的位置网格
         use_position_clustering=False,  # 使用规则网格
-        compression='gzip'
+        compression='gzip',
+        momentum_scale='linear',
+        position_scale='linear',
+
+        momentum_log_eps=1e-12
     )
     
     # 创建分块系统
     blocker = HierarchicalParticleBlocking(
         data_path="/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Decay_B2025-12-03_2HDM_B_test/B_521_pos.csv",
-        output_dir="/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks",
+        output_dir="/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_18",
         config=config
     )
     
@@ -581,7 +710,7 @@ if __name__ == "__main__":
     blocks = blocker.create_blocks()
     
     # 保存分块数据
-    blocker.save_blocks(format='csv')  # 或 'hdf5', 'csv'
+    blocker.save_blocks(format='hdf5')  # 或 'hdf5', 'csv'
     
     # 获取摘要信息
     summary = blocker.get_block_summary()
@@ -591,7 +720,7 @@ if __name__ == "__main__":
     print(f"Average particles per block: {summary['particle_count'].mean():.1f}")
     
     # 保存摘要
-    summary.to_csv("/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/block_summary.csv", index=False)
+    summary.to_csv("/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_18/block_summary.csv", index=False)
     
     # 示例：加载特定块
     example_block_id = "mom_000_pos_000_000_000"

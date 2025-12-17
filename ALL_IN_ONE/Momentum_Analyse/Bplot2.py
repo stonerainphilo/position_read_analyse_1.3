@@ -5,14 +5,14 @@ import pandas as pd
 import numpy as np
 
 # prefer matrix format (rows = p_centers, cols = theta_centers)
-matrix_path = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/hist_matrix.csv'
+matrix_path = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_18/hist_matrix.csv'
 if os.path.exists(matrix_path):
     matrix = pd.read_csv(matrix_path, index_col=0)
     p_centers = matrix.index.astype(float).values
     theta_centers = matrix.columns.astype(float).values
     hist2d = matrix.values  # shape (n_p, n_theta)
 else:
-    df = pd.read_csv('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/hist.csv')
+    df = pd.read_csv('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_18/hist.csv')
     hist_pivot = df.pivot_table(index='p_center_GeV', columns='theta_center_rad', values='count', fill_value=0)
     p_centers = hist_pivot.index.astype(float).values
     theta_centers = hist_pivot.columns.astype(float).values
@@ -45,8 +45,8 @@ vmin = positive_counts.min() if positive_counts.size > 0 else 1e-10
 
 # --- New: make cells visually larger by rebinning and increasing figure size ---
 # Set these to >1 to merge adjacent bins (coarser grid -> larger cells)
-rebin_p = 4         # merge every 4 p bins (rows)
-rebin_theta = 4     # merge every 4 theta bins (cols)
+rebin_p = 3        # merge every 4 p bins (rows)
+rebin_theta = 3     # merge every 4 theta bins (cols)
 
 def rebin_and_group(hist, p_centers, theta_centers, rp, rt):
     if rp == 1 and rt == 1:
@@ -64,7 +64,7 @@ hist_plot, p_centers_plot, theta_centers_plot = rebin_and_group(hist2d, p_center
 x_edges = centers_to_edges(theta_centers_plot)
 y_edges = centers_to_edges(p_centers_plot)
 
-# recompute vmin for plotted data
+# # recompute vmin for plotted data
 positive_counts = hist_plot[hist_plot > 0]
 vmin = positive_counts.min() if positive_counts.size > 0 else vmin
 
@@ -72,8 +72,11 @@ vmin = positive_counts.min() if positive_counts.size > 0 else vmin
 plt.figure(figsize=(14, 10))
 plt.pcolormesh(x_edges, y_edges, hist_plot, cmap='viridis', norm=LogNorm(vmin=vmin),
                shading='auto', rasterized=True)
+# im1 = plt.pcolormesh(x_edges, y_edges, hist.T,  # 转置以适应pcolormesh
+#                     cmap='viridis', norm=LogNorm())
 plt.xscale('log'); plt.yscale('log')
 plt.xlabel('Angle with Z-axis (rad)'); plt.ylabel('Momentum (GeV/c)')
+plt.xlim(0, 1.07)
 plt.colorbar(label='Counts (weighted)')
 plt.grid(True, alpha=0.3)
-plt.savefig('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/B_block_p_x.png', dpi=200)
+plt.savefig('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_18/B_block_p_x_log.png', dpi=200)
