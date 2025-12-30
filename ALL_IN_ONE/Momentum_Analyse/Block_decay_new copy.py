@@ -1048,6 +1048,125 @@ class LLPDecaySimulationPipeline:
         print(f"Report saved to: {report_file}")
         print(f"\nKey results are in: {self.output_dir}/aggregated_results/")
         print(f"Use the aggregated results for further analysis and visualization.")    
+    def simulate_llp_decays(self,
+                           samples_per_block: int = 100,
+                           max_llp_params: Optional[int] = None,
+                           target_region: Optional[Dict] = None):
+        """
+        模拟LLP衰变过程
+        
+        Args:
+            samples_per_block: 每个母粒子块抽样数
+            max_llp_params: 最大处理的LLP参数数（用于测试）
+            target_region: 目标区域定义
+        """
+        if target_region:
+            self.decay_config.target_region = target_region
+        
+        print("=" * 70)
+        print("LLP Decay Simulation Pipeline")
+        print("=" * 70)
+        
+        # 获取所有母粒子块
+        all_blocks = self.particle_loader.index['block_id'].tolist()
+        print(f"Found {len(all_blocks)} mother particle blocks")
+        
+        # 限制处理的LLP参数数量（用于测试）
+        if max_llp_params and max_llp_params < len(self.llp_params_df):
+            llp_params_to_process = self.llp_params_df.head(max_llp_params)
+            print(f"Processing first {max_llp_params} LLP parameters (testing mode)")
+        else:
+            llp_params_to_process = self.llp_params_df
+        
+        # 处理每个LLP参数
+        for idx, llp_row in tqdm(llp_params_to_process.iterrows(), 
+                                total=len(llp_params_to_process),
+                                desc="Processing LLP parameters"):
+            
+            llp_mass = llp_row['mH']
+            llp_lifetime = llp_row['ltime']
+            tanb = llp_row['tanb']
+            vis_br = llp_row['Br_visible']
+            # 收集所有衰变位置
+            all_decay_positions = []
+            all_weights = []
+            
+            # 对每个母粒子块
+            for block_id in tqdm(all_blocks, desc="Sampling B blocks", leave=False):
+                try:
+                    # 从块中抽样粒子
+                    sampled_particles = self.particle_loader.sample_from_block(
+                        block_id=block_id,
+                        n_samples=samples_per_block,
+                        strategy='importance'
+                    )
+                    # print(f"Processing block {block_id} for mass={llp_mass}, tanb={tanb}")
+                    
+                    # 对每个抽样粒子计算LLP衰变
+                    for _, particle in sampled_particles.iterrows():
+                        birth_position = particle[['decay_x', 'decay_y', 'decay_z']].values
+                        momentum = particle[['e', 'px', 'py', 'pz']].values
+                        
+                        try:
+                            llp_momentum, _ = two_body_decay_lab(momentum, 5.279, llp_mass, 0.494)
+                            decay_pos, _ = generate_decay_position(llp_lifetime, llp_momentum, birth_position)
+                            
+                            if not np.any(np.isnan(decay_pos)):
+                                all_decay_positions.append(decay_pos)
+                                # 权重 = 1 / 抽样率
+                                all_weights.append(len(sampled_particles) / samples_per_block)
+                                
+                        except (ValueError, ZeroDivisionError):
+                            continue
+                            
+                except Exception as e:
+                    print(f"Error processing block {block_id}: {e}")
+                    continue
+            
+            if len(all_decay_positions) == 0:
+                print(f"Warning: No valid decays for mass={llp_mass}, tanb={tanb}")
+                continue
+            
+            # 转换为numpy数组
+            decay_positions = np.array(all_decay_positions)
+            weights = np.array(all_weights)
+            
+            # 准备LLP参数
+            llp_params = {
+                'mass': llp_mass,
+                'lifetime': llp_lifetime,
+                'tanb': tanb,
+                'vis_br': vis_br
+            }
+            
+            # 处理衰变数据
+            block_id = self.analyzer.process_llp_decays(
+                llp_params=llp_params,
+                decay_positions=decay_positions,
+                weights=weights,
+                block_name_suffix=f"_{idx:04d}"
+            )
+            
+            # 保存结果
+            self.simulation_results.append({
+                'mass': llp_mass,
+                'lifetime': llp_lifetime,
+                'tanb': tanb,
+                # 'block_id': block_id,
+                'total_decays': float(np.sum(weights)),
+                # 'unique_positions': len(decay_positions)
+            })
+            
+            # 定期保存进度
+            if (idx + 1) % 1 == 0:
+                print(f"Processed {idx + 1}/{len(llp_params_to_process)} LLP parameters")
+                self._save_progress()
+        
+        print(f"\nSimulation complete! Processed {len(self.simulation_results)} LLP parameters")
+        
+        # 最终保存
+        self._save_final_results()
+    
 
     
     def _save_progress(self):

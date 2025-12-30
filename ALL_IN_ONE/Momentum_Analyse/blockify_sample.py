@@ -690,7 +690,7 @@ if __name__ == "__main__":
     # 配置分块参数
     config = BlockConfig(
         momentum_n_clusters=5000,  # 8个动量聚类
-        position_bin_size=1000.0,  # 50mm的位置网格
+        position_bin_size=500.0,  # 50mm的位置网格
         use_position_clustering=False,  # 使用规则网格
         compression='gzip',
         momentum_scale='linear',
@@ -701,8 +701,8 @@ if __name__ == "__main__":
     
     # 创建分块系统
     blocker = HierarchicalParticleBlocking(
-        data_path="/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Decay_B2025-12-03_2HDM_B_test/B_521_pos.csv",
-        output_dir="/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_18",
+        data_path="/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/14TeV/14TeV_B.csv",
+        output_dir="/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/14TeV/14TeV_Block",
         config=config
     )
     
@@ -720,7 +720,7 @@ if __name__ == "__main__":
     print(f"Average particles per block: {summary['particle_count'].mean():.1f}")
     
     # 保存摘要
-    summary.to_csv("/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_18/block_summary.csv", index=False)
+    summary.to_csv("/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/14TeV/14TeV_Block/block_summary.csv", index=False)
     
     # 示例：加载特定块
     example_block_id = "mom_000_pos_000_000_000"
