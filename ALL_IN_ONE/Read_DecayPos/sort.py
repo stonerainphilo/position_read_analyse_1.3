@@ -399,6 +399,6 @@ if __name__ == "__main__":
     # quick_plot_envelope('your_data.csv', method='binning', num_bins=40)
     
     # 3. 或直接调用特定方法
-    plot_envelope_sliding_window('/media/ubuntu/SRPPS/Results/CODEX_HP_exclusion.csv', filename2='/media/ubuntu/SRPPS/Results/MATHUSLA_HP_exclusion.csv', filename3='/media/ubuntu/SRPPS/Results/FASER2_HP_exclusion.csv', window_size=0.05, detector_name='ALL_DETECTORS_higg_portal',)
+    plot_envelope_sliding_window('/media/ubuntu/SRPPS/Results/Higgs_portal/CODEX_HP_exclusion.csv', filename2='/media/ubuntu/SRPPS/Results/Higgs_portal/MATHUSLA_HP_exclusion.csv', filename3='/media/ubuntu/SRPPS/Results/Higgs_portal/FASER2_HP_exclusion.csv', window_size=0.05, detector_name='higg_portal',)
     
     print("请先修改代码中的文件路径，然后取消注释相应的函数调用")

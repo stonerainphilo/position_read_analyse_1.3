@@ -35,7 +35,7 @@ def fast_interpolation():
     df_a.drop('log_tau', axis=1, inplace=True)
     
     # 保存结果
-    df_a.to_csv('/media/ubuntu/SRPPS/Results/C_fast.csv', index=False)
+    df_a.to_csv('/media/ubuntu/SRPPS/Results/C_2HDM_H.csv', index=False)
     print("结果已保存到 C_fast2.csv")
 
     return df_a
