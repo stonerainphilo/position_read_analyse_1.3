@@ -684,6 +684,7 @@ class LLPDistributionAnalyzer:
                 ax2.set_title(f'{coord.upper()} Fit: R² = {r2:.4f}', fontsize=11)
                 ax2.legend(loc='upper left')
                 ax2_twin.legend(loc='upper right')
+                ax2.set_xlim(-1.5e8, 1.5e8)
                 ax2.grid(True, alpha=0.3)
             except Exception as e:
                 print(f"Warning: Residual plot failed for {llp_id} {coord}: {e}")
@@ -2221,8 +2222,8 @@ class LLPDistributionDiagnostic:
 def main():
     """主函数"""
     # 设置路径
-    data_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_scan_40_N/llp_simulation_results/incremental_results"
-    diagnostic_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_scan_40_N/diagnostics"
+    data_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/TEST_1/llp_simulation_results/incremental_results"
+    diagnostic_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/TEST_1/diagnostics"
     
     print("=" * 70)
     print("LLP DISTRIBUTION DIAGNOSTIC TOOL")
@@ -2309,8 +2310,8 @@ def main():
         traceback.print_exc()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 # 使用示例
 # if __name__ == "__main__":
@@ -2320,51 +2321,51 @@ if __name__ == "__main__":
 #     quick_diagnostic(data_dir, llp_ids=['llp_0117', 'llp_0123', 'llp_0135'])
 
 
-# def main():
-#     """主函数"""
-#     # 设置路径
-#     data_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_scan_40/llp_simulation_results/incremental_results"
-#     output_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/test_scan_40/distributution_density"
+def main():
+    """主函数"""
+    # 设置路径
+    data_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/TEST_1/llp_simulation_results/incremental_results"
+    output_dir = "/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/TEST_1/distributution_density"
     
-#     print("=" * 70)
-#     print("LLP DECAY POSITION DISTRIBUTION ANALYSIS")
-#     print("=" * 70)
+    print("=" * 70)
+    print("LLP DECAY POSITION DISTRIBUTION ANALYSIS")
+    print("=" * 70)
     
-#     # 创建分析器
-#     analyzer = LLPDistributionAnalyzer(data_dir)
+    # 创建分析器
+    analyzer = LLPDistributionAnalyzer(data_dir)
     
-#     try:
-#         # 1. 加载数据
-#         print("\n[1/3] Loading data...")
-#         analyzer.load_all_data()
+    try:
+        # 1. 加载数据
+        print("\n[1/3] Loading data...")
+        analyzer.load_all_data()
         
-#         # 2. 分析分布
-#         print("\n[2/3] Analyzing distributions...")
-#         analyzer.analyze_distributions()
+        # 2. 分析分布
+        print("\n[2/3] Analyzing distributions...")
+        analyzer.analyze_distributions()
         
-#         # 3. 创建可视化
-#         print("\n[3/3] Creating visualizations...")
-#         analyzer.create_distribution_plots(output_dir)
+        # 3. 创建可视化
+        print("\n[3/3] Creating visualizations...")
+        analyzer.create_distribution_plots(output_dir)
         
-#         # 4. 保存结果
-#         analyzer.save_results(output_dir)
+        # 4. 保存结果
+        analyzer.save_results(output_dir)
         
-#         print("\n" + "=" * 70)
-#         print("ANALYSIS COMPLETED SUCCESSFULLY!")
-#         print("=" * 70)
+        print("\n" + "=" * 70)
+        print("ANALYSIS COMPLETED SUCCESSFULLY!")
+        print("=" * 70)
         
-#         print(f"\n✅ Results saved to: {output_dir}")
-#         print(f"\n📊 Key output files:")
-#         print(f"  {output_dir}/llp_summary.csv - Complete summary")
-#         print(f"  {output_dir}/analysis_summary.png - Comprehensive summary plot")
-#         print(f"  {output_dir}/analysis_report.txt - Detailed report")
-#         print(f"  {output_dir}/distribution_models/ - Individual distribution models")
+        print(f"\n✅ Results saved to: {output_dir}")
+        print(f"\n📊 Key output files:")
+        print(f"  {output_dir}/llp_summary.csv - Complete summary")
+        print(f"  {output_dir}/analysis_summary.png - Comprehensive summary plot")
+        print(f"  {output_dir}/analysis_report.txt - Detailed report")
+        print(f"  {output_dir}/distribution_models/ - Individual distribution models")
         
-#     except Exception as e:
-#         print(f"\n❌ Error during analysis: {e}")
-#         import traceback
-#         traceback.print_exc()
+    except Exception as e:
+        print(f"\n❌ Error during analysis: {e}")
+        import traceback
+        traceback.print_exc()
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

@@ -4,7 +4,7 @@
 """
 import numpy as np
 import pandas as pd
-from Block_decay_new import LLPDecaySimulationPipeline, LLPBlockConfig
+from ALL_IN_ONE.Momentum_Analyse.Block_decay_new import LLPDecaySimulationPipeline, LLPBlockConfig
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 def example_complete_workflow():

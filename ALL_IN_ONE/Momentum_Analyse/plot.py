@@ -94,7 +94,7 @@ def plot(file, out):
     plt.close()
     return 0
 
-plot('/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/Summing_up/New_Example.csv', '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/Summing_up/')
+plot('/media/ubuntu/SRPPS/Results/C.csv', '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/B_blocks/Summing_up/')
 # csv_file = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/14TeV_LLP_Distribution/New Detector Example_detailed.csv'
 # out_path = '/media/ubuntu/6156e08b-fdb1-4cde-964e-431f74a6078e/Files/LLP_DATA/Test/14TeV_LLP_Distribution/'
 # plot_for_Res(csv_file, out_path, Detector="New_Detector_Sample")

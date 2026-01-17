@@ -9,7 +9,7 @@ import glob
 import gc
 import psutil
 import humanize
-from Block_decay_new import LLPDecaySimulationPipeline, LLPBlockConfig
+from ALL_IN_ONE.Momentum_Analyse.Block_decay_new import LLPDecaySimulationPipeline, LLPBlockConfig
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
